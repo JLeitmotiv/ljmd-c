@@ -69,21 +69,22 @@ class prints(object):
       self.gp = open(mdinfo.coord_output,'w')
       self.fp = open(mdinfo.thermo_output,'w')
 
-   def print_output(self,mdinfo):
+   def print_output(self,nfi,mdinfo):
       self.fp.write("%8d %20.8f %20.8f %20.8f %20.8f\n" %
-                    (mdinfo.nfi,mdinfo.temp,mdinfo.ekin,
+                    (nfi,mdinfo.temp,mdinfo.ekin,
                      mdinfo.epot,mdinfo.ekin+mdinfo.epot))
       self.gp.write("%d\n nfi=%d etot=%20.8f\n"% 
                     (mdinfo.natoms,mdinfo.nfi,
                      mdinfo.ekin+mdinfo.epot))
       for i in range(mdinfo.natoms):
          self.gp.write("Ar  %20.8f %20.8f %20.8f\n"%
-                       (mdinfo.pos[i],mdinfo.pos[natoms+i],
-                        mdinfo.pos[2*natoms+i]))
+                       (mdinfo.pos[i],mdinfo.pos[mdinfo.natoms+i],
+                        mdinfo.pos[2*mdinfo.natoms+i]))
 
 def allocate_arrays(mdinfo):
    mdinfo.pos=(c_double * (mdinfo.natoms * 3) )()
    mdinfo.vel=(c_double * (mdinfo.natoms * 3) )()
+   mdinfo.frc=(c_double * (mdinfo.natoms * 3) )()
    
 def read_restart(mdinfo):
    fp = open(mdinfo.inputfile,'rb')

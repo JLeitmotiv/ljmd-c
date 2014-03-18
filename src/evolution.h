@@ -5,4 +5,5 @@
 
 void first_step(mdsys_t *sys);
 void final_step(mdsys_t *sys);
+void ekin(mdsys_t *sys);
 #endif

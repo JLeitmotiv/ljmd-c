@@ -1,9 +1,9 @@
 #include "force.h"
+
 /* compute forces */
 void force(mdsys_t *sys) 
 {
     double epot;
-
     epot = 0.0;
     
 #if defined(_OPENMP)
