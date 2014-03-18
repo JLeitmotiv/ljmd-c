@@ -9,8 +9,7 @@ SRC=evolution.c force.c helper.c list_cell.c velverlet.c
 VPATH=../src
 OBJ=$(SRC:%.c=%.o)
 
-default: ../ljmd-serial.x
-library: ../libljmd-serial.so
+default: ../libljmd-serial.so ../ljmd-serial.x
 
 clean:
 	rm -f *.mod *.o ../ljmd-serial.x ../libljmd-serial.so

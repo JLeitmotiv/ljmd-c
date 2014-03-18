@@ -19,7 +19,6 @@
 #define BLEN 200
 
 /* a few physical constants */
-const double kboltz=0.0019872067;     /* boltzman constant in kcal/mol/K */
 /* number of MD steps between cell list updates */
 const int cellfreq=4;
 
@@ -54,28 +53,13 @@ static int get_a_line(FILE *fp, char *buf)
   return 0;
 }
  
-
-/* compute kinetic energy */
-static void ekin(mdsys_t *sys)
-{   
-  int i;
-
-  sys->ekin=0.0;
-  for (i=0; i< 3*sys->natoms; ++i) {
-    sys->ekin += sys->vel[i]*sys->vel[i];
-  }
-  sys->ekin *= 0.5*mvsq2e*sys->mass;
-  sys->temp  = 2.0*sys->ekin/(3.0*sys->natoms-3.0)/kboltz;
-}
-
-
 /* append data to output. */
 static void output(mdsys_t *sys, FILE *erg, FILE *traj)
 {
   int i,natoms;
   natoms=sys->natoms;
     
-  printf("% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
+  //printf("% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
   fprintf(erg,"% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
   fprintf(traj,"%d\n nfi=%d etot=%20.8f\n", sys->natoms, sys->nfi, sys->ekin+sys->epot);
   for (i=0; i<natoms; ++i) {

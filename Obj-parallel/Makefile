@@ -9,8 +9,7 @@ SRC=evolution.c force.c helper.c list_cell.c velverlet.c
 VPATH=../src
 OBJ=$(SRC:%.c=%.o)
 
-default: ../ljmd-parallel.x
-library: ../libljmd-parallel.so
+default: ../libljmd-parallel.so ../ljmd-parallel.x
 
 clean:
 	rm -f *.mod *.o ../ljmd-parallel.x ../libljmd-parallel.so

@@ -31,6 +31,10 @@ import sys
 import numpy as np
 from ctypes import *
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> python_wrapper
 class cell_t(Structure):
    _fields_ = [("natoms", c_int),
                ("owner", c_int),
@@ -65,35 +69,37 @@ class mdsys_t(Structure):
 
 class prints(object):
    def __init__(self,mdinfo):
-      gp.open(mdinfo.coord_output,'w')
-      fp.open(mdinfo.thermo_output,'w')
+      self.gp = open(mdinfo.coord_output,'w')
+      self.fp = open(mdinfo.thermo_output,'w')
 
-   def print_output(self,mdinfo):
-      fp.write("%8d %20.8f %20.8f %20.8f %20.8f\n" %
-               (mdinfo.nfi,mdinfo.temp,mdinfo.ekin,
-                mdinfo.epot,mdinfo.ekin+mdinfo.epot))
-      gp.write("%d\n nfi=%d etot=%20.8f\n"% 
-               (mdinfo.natoms,mdinfo.nfi,
-               mdinfo.ekin+mdinfo.epot))
+   def print_output(self,nfi,mdinfo):
+      self.fp.write("%8d %20.8f %20.8f %20.8f %20.8f\n" %
+                    (nfi,mdinfo.temp,mdinfo.ekin,
+                     mdinfo.epot,mdinfo.ekin+mdinfo.epot))
+      self.gp.write("%d\n nfi=%d etot=%20.8f\n"% 
+                    (mdinfo.natoms,mdinfo.nfi,
+                     mdinfo.ekin+mdinfo.epot))
       for i in range(mdinfo.natoms):
-         gp.write("Ar  %20.8f %20.8f %20.8f\n"%(mdinfo.pos[i]%mdinfo.pos[natoms+i]%mdinfo.pos[2*natoms+i]))
+         self.gp.write("Ar  %20.8f %20.8f %20.8f\n"%
+                       (mdinfo.pos[i],mdinfo.pos[mdinfo.natoms+i],
+                        mdinfo.pos[2*mdinfo.natoms+i]))
 
-def grow_array(mdinfo):
-   mdinfo.pos=np.zeros(mdinfo.natoms*3)
-   mdinfo.vel=np.zeros(mdinfo.natoms*3)
+def allocate_arrays(mdinfo):
+   mdinfo.pos=(c_double * (mdinfo.natoms * 3) )()
+   mdinfo.vel=(c_double * (mdinfo.natoms * 3) )()
+   mdinfo.frc=(c_double * (mdinfo.natoms * 3) )()
    
 def read_restart(mdinfo):
    fp = open(mdinfo.inputfile,'rb')
-   print len(mdinfo.pos)
    for i in range(mdinfo.natoms):   
       line=fp.readline()
-      aux=line.split()
+      aux=[float(j) for j in line.split()]
       mdinfo.pos[i]=aux[0]
       mdinfo.pos[i+mdinfo.natoms]=aux[1]
       mdinfo.pos[i+2*mdinfo.natoms]=aux[2]
    for i in range(mdinfo.natoms):
       line=fp.readline()
-      aux=line.split() 
+      aux=[float(j) for j in line.split()]
       mdinfo.vel[i]=aux[0] 
       mdinfo.vel[i+mdinfo.natoms]=aux[1]
       mdinfo.vel[i+2*mdinfo.natoms]=aux[2]
