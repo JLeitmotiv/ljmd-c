@@ -10,6 +10,7 @@ VPATH=../src
 OBJ=$(SRC:%.c=%.o)
 
 default: ../ljmd-parallel.x
+library: ../libljmd-parallel.so
 
 clean:
 	rm -f *.mod *.o ../ljmd-parallel.x
@@ -21,6 +22,9 @@ clean:
 # compilation pattern rule for objects
 %.o: %.c
 	$(CC) -c $(CFLAGS) $<
+
+../libljmd-parallel.so: ljmd.c
+	$(CC) $(CFLAGS) -fPIC -shared $<
 
 # dependencies
 ljmd.o: ljmd.c
