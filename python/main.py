@@ -8,7 +8,8 @@ import sys
 import numpy as np
 from class_and_funtion import * 
 
-md=CDLL("../libljmd-serial.so")
+#md=CDLL("../libljmd-serial.so")
+md=CDLL("../libljmd-parallel.so")
 
 if __name__ == "__main__":
    cellfreq=4;
@@ -33,7 +34,7 @@ if __name__ == "__main__":
   # mdsys.nfi=0
   # mdsys.clist=None
   # mdsys.plist=None
-   mdsys.nthreads=1 #Because we are running in serial mode
+   mdsys.nthreads=8 #Because we are running in serial mode
 
    allocate_arrays(mdsys)
    read_restart(mdsys)

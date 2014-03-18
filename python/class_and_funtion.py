@@ -87,7 +87,7 @@ class prints(object):
 def allocate_arrays(mdinfo):
    mdinfo.pos=(c_double * (mdinfo.natoms * 3) )()
    mdinfo.vel=(c_double * (mdinfo.natoms * 3) )()
-   mdinfo.frc=(c_double * (mdinfo.natoms * 3) )()
+   mdinfo.frc=(c_double * (mdinfo.nthreads * mdinfo.natoms * 3) )()
    
 def read_restart(mdinfo):
    fp = open(mdinfo.inputfile,'rb')
