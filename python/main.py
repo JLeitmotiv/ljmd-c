@@ -1,12 +1,10 @@
-from result import Result
-from class_and_funtion import *
 
 md=CDLL("../libljmd-serial.so")
-
 ###--- variables will be comes from program
 ### this import is valid for only data file
 import sys
 import numpy as np
+from class_and_funtion import 
 
 if __name__ == "__main__":
    mdsys=mdsys_t()
@@ -27,6 +25,7 @@ if __name__ == "__main__":
          printt.print_output(mdsys)
 
 # fetch the data from file 
+from result import Result
 (time, temp, Ekin, Epot, Etot) = np.loadtxt(mdsys.thermo_output, unpack = True)
 ###--- the variables are loaded
 result = Result(time,temp,Ekin,Epot,Etot)
