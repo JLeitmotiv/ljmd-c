@@ -62,7 +62,11 @@ class mdsys_t(Structure):
                ("npair", c_int),
                ("nidx", c_int),
                ("delta", c_double)]
-
+   def __init__(self):
+       self.nfi=0
+       self.clist=None
+       self.plist=None
+       
 class prints(object):
    def __init__(self,mdinfo):
       self.gp = open(mdinfo.coord_output,'w')
@@ -102,37 +106,37 @@ def read_restart(mdinfo):
    fp.close()
 
 
-def file_input(mdinfo):
-   fp.open(lineinp,rb)
-   for line in fp
+def file_input(lineinp,mdinfo):
+   fp=open(lineinp,'rb')
+   for line in fp:
     aux=line.split('#')
     aux[1]=aux[1].strip()
-    if aux[1]="natoms":
+    if aux[1]=="natoms":
      mdinfo.natoms=int(aux[0])
-    else if aux[1]="mass in AMU":
+    elif aux[1]=="mass in AMU":
      mdinfo.mass=float(aux[0])
-    else if aux[1]="epsilon in kcal/mol":
+    elif aux[1]=="epsilon in kcal/mol":
      mdinfo.epsilon=float(aux[0])
-    else if aux[1]="sigma in angstrom":   
+    elif aux[1]=="sigma in angstrom":   
      mdinfo.sigma=float(aux[0])
-    else if aux[1]="rcut in angstrom":
+    elif aux[1]=="rcut in angstrom":
      mdinfo.rcut=float(aux[0])
-    else if aux[1]="box length (in angstrom)":
+    elif aux[1]=="box length (in angstrom)":
      mdinfo.box=float(aux[0])
-    else if aux[1]="nr MD steps":
+    elif aux[1]=="nr MD steps":
      mdinfo.nsteps=int(aux[0])
-    else if aux[1]="MD time step (in fs))":
+    elif aux[1]=="MD time step (in fs))":
      mdinfo.dt =float(aux[0])
-    else if aux[1]="output print frequency":
+    elif aux[1]=="output print frequency":
      mdinfo.nprint=int(aux[0])
-    else if aux[1]="restart":
+    elif aux[1]=="restart":
      mdinfo.inputfile=aux[0].strip()
-    else if aux[1]="thermo_output file":
+    elif aux[1]=="thermo_output file":
      mdinfo.thermo_output=aux[0].strip()
-    else if aux[1]="coord_output":
+    elif aux[1]=="coord_output":
      mdinfo.coord_output=aux[0].strip()
    fp.close()   
-
+   print mdinfo.inputfile
 def screen_input(mdinfo):
    print "Number of atoms"
    mdinfo.natoms=int(raw_input())

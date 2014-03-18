@@ -1,34 +1,38 @@
 #!/usr/bin/python
-md=CDLL("../libljmd-serial.so")
+from ctypes import *
+
 ###--- variables will be comes from program
 ### this import is valid for only data file
+
 import sys
 import numpy as np
 from class_and_funtion import * 
 
+md=CDLL("../libljmd-serial.so")
+
 if __name__ == "__main__":
    cellfreq=4;
    mdsys=mdsys_t()
-##   if len(sys.argv)==1:
-##      screen_input(mdsys)
-##   else:
-##      file_input(mdsys)
+   if len(sys.argv)==1:
+      screen_input(mdsys)
+   else:
+      file_input(sys.argv[1],mdsys)
 
-   mdsys.natoms=2916
-   mdsys.mass=39.948
-   mdsys.epsilon=0.2379
-   mdsys.sigma=3.405
-   mdsys.rcut=12.0
-   mdsys.box=51.4740
-   mdsys.nsteps=20000
-   mdsys.dt =5.0
-   mdsys.nprint=10
-   mdsys.inputfile="argon_2916.rest"
-   mdsys.thermo_output="argon_2916.dat"
-   mdsys.coord_output="argon_2916.xyz"
-   mdsys.nfi=0
-   mdsys.clist=None
-   mdsys.plist=None
+  # mdsys.natoms=2916
+  # mdsys.mass=39.948
+  # mdsys.epsilon=0.2379
+  # mdsys.sigma=3.405
+  # mdsys.rcut=12.0
+  # mdsys.box=51.4740
+  # mdsys.nsteps=20000
+  # mdsys.dt =5.0
+  # mdsys.nprint=10
+  # mdsys.inputfile="argon_2916.rest"
+  # mdsys.thermo_output="argon_2916.dat"
+  # mdsys.coord_output="argon_2916.xyz"
+  # mdsys.nfi=0
+  # mdsys.clist=None
+  # mdsys.plist=None
    mdsys.nthreads=1 #Because we are running in serial mode
 
    allocate_arrays(mdsys)
