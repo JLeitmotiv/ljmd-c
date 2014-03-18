@@ -107,7 +107,35 @@ def read_restart(mdinfo):
 
 
 def file_input(mdinfo):
-   pass
+   fp.open(lineinp,rb)
+   for line in fp
+    aux=line.split('#')
+    aux[1]=aux[1].strip()
+    if aux[1]="natoms":
+     mdinfo.natoms=int(aux[0])
+    else if aux[1]="mass in AMU":
+     mdinfo.mass=float(aux[0])
+    else if aux[1]="epsilon in kcal/mol":
+     mdinfo.epsilon=float(aux[0])
+    else if aux[1]="sigma in angstrom":   
+     mdinfo.sigma=float(aux[0])
+    else if aux[1]="rcut in angstrom":
+     mdinfo.rcut=float(aux[0])
+    else if aux[1]="box length (in angstrom)":
+     mdinfo.box=float(aux[0])
+    else if aux[1]="nr MD steps":
+     mdinfo.nsteps=int(aux[0])
+    else if aux[1]="MD time step (in fs))":
+     mdinfo.dt =float(aux[0])
+    else if aux[1]="output print frequency":
+     mdinfo.nprint=int(aux[0])
+    else if aux[1]="restart":
+     mdinfo.inputfile=aux[0].strip()
+    else if aux[1]="thermo_output file":
+     mdinfo.thermo_output=aux[0].strip()
+    else if aux[1]="coord_output":
+     mdinfo.coord_output=aux[0].strip()
+   fp.close()   
 
 def screen_input(mdinfo):
    print "Number of atoms"
