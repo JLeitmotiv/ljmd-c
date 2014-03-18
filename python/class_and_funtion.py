@@ -31,10 +31,6 @@ import sys
 import numpy as np
 from ctypes import *
 
-<<<<<<< HEAD
-=======
-
->>>>>>> python_wrapper
 class cell_t(Structure):
    _fields_ = [("natoms", c_int),
                ("owner", c_int),
