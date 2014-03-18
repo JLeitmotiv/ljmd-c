@@ -6,6 +6,6 @@
 /* ratio between cutoff radius and length of a cell */
 const double cellrat=2.0;
 
-static void free_cell_list(mdsys_t *sys);
-static void updcells(mdsys_t *sys);
-
+extern inline double pbc(double x, const double boxby2, const double box);
+void free_cell_list(mdsys_t *sys);
+void updcells(mdsys_t *sys);

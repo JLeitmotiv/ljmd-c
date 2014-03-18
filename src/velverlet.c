@@ -1,6 +1,6 @@
 #include "velverlet.h"
 
-static void velverlet(mdsys_t *sys)
+void velverlet(mdsys_t *sys)
 {
   /* first part: propagate velocities by half and positions by full step */
   first_step(sys);

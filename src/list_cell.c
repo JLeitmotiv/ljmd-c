@@ -2,7 +2,7 @@
 
 
 /* release cell list storage */
-static void free_cell_list(mdsys_t *sys)
+void free_cell_list(mdsys_t *sys)
 {
   int i;
     
@@ -19,7 +19,7 @@ static void free_cell_list(mdsys_t *sys)
 }
 
 /* build and update cell list */
-static void updcells(mdsys_t *sys)
+void updcells(mdsys_t *sys)
 {
   int i, ngrid, ncell, npair, midx, natoms;
   double delta, boxby2, boxoffs;

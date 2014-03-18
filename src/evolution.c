@@ -1,6 +1,9 @@
 #include "evolution.h"
 
-static void first_step(mdsys_t *sys)
+
+double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
+
+void first_step(mdsys_t *sys)
 {
   int i;
   double dtmf;
@@ -12,7 +15,7 @@ static void first_step(mdsys_t *sys)
   }
 }  
 
-static void final_step(mdsys_t *sys)
+void final_step(mdsys_t *sys)
 {
   int i;
   double dtmf;

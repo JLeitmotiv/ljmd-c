@@ -10,7 +10,7 @@
 #include <math.h>
 
 #include "mdsys.h"
-#include "evolution.h"
+//#include "evolution.h"
 #if defined(_OPENMP)
 #include <omp.h>
 #endif
@@ -22,6 +22,8 @@
 const double kboltz=0.0019872067;     /* boltzman constant in kcal/mol/K */
 /* number of MD steps between cell list updates */
 const int cellfreq=4;
+
+extern double mvsq2e;
 
 /* helper function: read a line and then return
    the first string with whitespace stripped off */
