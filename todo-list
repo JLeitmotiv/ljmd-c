@@ -1,0 +1,7 @@
+[ ]: improve input behaviour - set default values maybe in the initializer of the md class
+[ ]: "portability": figure out a way to ask for the number of threads in main.py
+[ ]: clean and sanitize main.py inputs
+----------------------------------------------------
+
+[ ]: add a LUT potential
+[ ]: add different integrators methods
