@@ -5,8 +5,8 @@
 8.5               # rcut in angstrom
 17.1580           # box length (in angstrom)
 argon_108.rest    # restart
-argon_108.xyz     # trajectory
-argon_108.dat     # energies
+argon_108.xyz     # coord_output file
+argon_108.dat     # thermo_output
 10000             # nr MD steps
 5.0               # MD time step (in fs)
 100               # output print frequency
