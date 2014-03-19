@@ -38,9 +38,9 @@ if __name__ == "__main__":
       mdsys.nsteps = app.nsteps
       mdsys.dt = app.dt
       mdsys.nprint = app.nprint
-      mdsys.restfile = app.restfile
-      mdsys.trajfile = app.trajfile
-      mdsys.output = app.ergfile
+      mdsys.inputfile = app.restfile
+      mdsys.file_coord = app.trajfile
+      mdsys.file_therm = app.ergfile
    else:
       mdsys.file_input(sys.argv[1])
 
