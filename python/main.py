@@ -1,9 +1,9 @@
 #!/usr/bin/python
 import sys
 import numpy as np
-from class_and_funtion import * 
 from ctypes import *
 from result import Result
+from md_classes import mdsys_t
 
 #md=CDLL("../libljmd-serial.so")
 md=CDLL("../libljmd-parallel.so")
@@ -12,16 +12,15 @@ if __name__ == "__main__":
    cellfreq=4;
    mdsys=mdsys_t()
    if len(sys.argv)==1:
-      screen_input(mdsys)
+      mdsys.screen_input()
    else:
-      file_input(sys.argv[1],mdsys)
+      mdsys.file_input(sys.argv[1])
 
 #   mdsys.nthreads=1 #Because we are running in serial mode
    mdsys.nthreads=8 #Because we are running in parallel mode
 
-   allocate_arrays(mdsys)
-   read_restart(mdsys)
-   printt=prints(mdsys)
+   mdsys.allocate_arrays()
+   mdsys.read_restart()
    
    md.updcells(byref(mdsys));
    md.ekin(byref(mdsys));
@@ -29,7 +28,7 @@ if __name__ == "__main__":
    for i in range(mdsys.nsteps):
       ## This is the main loop, integrator and force calculator
       if (i % mdsys.nprint == 0):
-         printt.print_output(i+1, mdsys)
+         mdsys.output(i)
       md.first_step(byref(mdsys))
       md.force(byref(mdsys))
       md.final_step(byref(mdsys))
@@ -38,7 +37,7 @@ if __name__ == "__main__":
          md.updcells(byref(mdsys))
 
 # fetch the data from file 
-(time, temp, Ekin, Epot, Etot) = np.loadtxt(mdsys.thermo_output, unpack = True)
+(time, temp, Ekin, Epot, Etot) = np.loadtxt(mdsys.file_therm.name, unpack = True)
 ###--- the variables are loaded
 result = Result(time,temp,Ekin,Epot,Etot)
 result.graph()
