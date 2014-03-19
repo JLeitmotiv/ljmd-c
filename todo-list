@@ -1,8 +1,11 @@
 [ ]: improve input behaviour - set default values maybe in the initializer of the md class
 [ ]: "portability": figure out a way to ask for the number of threads in main.py
-[ ]: Makefiles and c-code: try to remove the warnings and check that Makefiles work properly
+[ ]: Makefiles and c-code
+   ( ): remove the warnings and check that Makefiles work properly
+   ( ): refactor mdsys class in both c and python to remove unneeded info (like nfi, ncellfreq, and such)
 [ ]: clean and sanitize main.py inputs
 ----------------------------------------------------
 
 [ ]: add a LUT potential
 [ ]: add different integrators methods
+[ ]: add different atom types
