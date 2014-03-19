@@ -1,12 +1,12 @@
-108               # natoms
-39.948            # mass in AMU
-0.2379            # epsilon in kcal/mol
-3.405             # sigma in angstrom
-8.5               # rcut in angstrom
-17.1580           # box length (in angstrom)
-argon_108.rest    # restart
-argon_108.xyz     # coord_output file
-argon_108.dat     # thermo_output
-10000             # nr MD steps
-5.0               # MD time step (in fs)
-100               # output print frequency
+natoms 108               # natoms
+mass 39.948            # mass in AMU
+epsilon 0.2379            # epsilon in kcal/mol
+sigma 3.405             # sigma in angstrom
+rcut 8.5               # rcut in angstrom
+boxlength 17.1580           # box length (in angstrom)
+restart argon_108.rest    # restart
+coord argon_108.xyz     # coord_output file
+thermo argon_108.dat     # thermo_output
+nsteps 10000             # nr MD steps
+timestep 5.0               # MD time step (in fs)
+print 100               # output print frequency

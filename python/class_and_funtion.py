@@ -63,10 +63,10 @@ class mdsys_t(Structure):
                ("nidx", c_int),
                ("delta", c_double)]
    def __init__(self):
-       self.nfi=0
-       self.clist=None
-       self.plist=None
-       
+      self.nfi=0
+      self.clist=None
+      self.plist=None
+      
 class prints(object):
    def __init__(self,mdinfo):
       self.gp = open(mdinfo.coord_output,'w')
@@ -93,50 +93,65 @@ def read_restart(mdinfo):
    fp = open(mdinfo.inputfile,'rb')
    for i in range(mdinfo.natoms):   
       line=fp.readline()
-      aux=[float(j) for j in line.split()]
-      mdinfo.pos[i]=aux[0]
-      mdinfo.pos[i+mdinfo.natoms]=aux[1]
-      mdinfo.pos[i+2*mdinfo.natoms]=aux[2]
+      try:
+         aux=[float(j) for j in line.split()]
+         mdinfo.pos[i]=aux[0]
+         mdinfo.pos[i+mdinfo.natoms]=aux[1]
+         mdinfo.pos[i+2*mdinfo.natoms]=aux[2]
+      except ValueError:
+         print "Error when trying to read_restart position in line %i" % (i+1)
+         raise
    for i in range(mdinfo.natoms):
       line=fp.readline()
-      aux=[float(j) for j in line.split()]
-      mdinfo.vel[i]=aux[0] 
-      mdinfo.vel[i+mdinfo.natoms]=aux[1]
-      mdinfo.vel[i+2*mdinfo.natoms]=aux[2]
+      try:
+         aux=[float(j) for j in line.split()]
+         mdinfo.vel[i]=aux[0] 
+         mdinfo.vel[i+mdinfo.natoms]=aux[1]
+         mdinfo.vel[i+2*mdinfo.natoms]=aux[2]
+      except ValueError:
+         print "Error when trying to read_restart velocity in line %i" % (i+1+mdinfo.natoms)
+         raise
    fp.close()
 
 
 def file_input(lineinp,mdinfo):
    fp=open(lineinp,'rb')
    for line in fp:
-    aux=line.split('#')
-    aux[1]=aux[1].strip()
-    if aux[1]=="natoms":
-     mdinfo.natoms=int(aux[0])
-    elif aux[1]=="mass in AMU":
-     mdinfo.mass=float(aux[0])
-    elif aux[1]=="epsilon in kcal/mol":
-     mdinfo.epsilon=float(aux[0])
-    elif aux[1]=="sigma in angstrom":   
-     mdinfo.sigma=float(aux[0])
-    elif aux[1]=="rcut in angstrom":
-     mdinfo.rcut=float(aux[0])
-    elif aux[1]=="box length (in angstrom)":
-     mdinfo.box=float(aux[0])
-    elif aux[1]=="nr MD steps":
-     mdinfo.nsteps=int(aux[0])
-    elif aux[1]=="MD time step (in fs))":
-     mdinfo.dt =float(aux[0])
-    elif aux[1]=="output print frequency":
-     mdinfo.nprint=int(aux[0])
-    elif aux[1]=="restart":
-     mdinfo.inputfile=aux[0].strip()
-    elif aux[1]=="thermo_output file":
-     mdinfo.thermo_output=aux[0].strip()
-    elif aux[1]=="coord_output":
-     mdinfo.coord_output=aux[0].strip()
-   fp.close()   
-   print mdinfo.inputfile
+      #discard comments and parse instructions
+      no_comment = line.split('#')[0]
+      print no_comment
+      #parse input
+      inp = [i.strip() for i in no_comment.split(' ')]
+      key = inp[0]
+      val = inp[1]
+      if key=="natoms":
+         mdinfo.natoms=int(val)
+      elif key=="mass":
+         mdinfo.mass=float(val)
+      elif key=="epsilon":
+         mdinfo.epsilon=float(val)
+      elif key=="sigma":   
+         mdinfo.sigma=float(val)
+      elif key=="rcut":
+         mdinfo.rcut=float(val)
+      elif key=="boxlength":
+         mdinfo.box=float(val)
+      elif key=="nsteps":
+         mdinfo.nsteps=int(val)
+      elif key=="timestep":
+         mdinfo.dt =float(val)
+      elif key=="print":
+         mdinfo.nprint=int(val)
+      elif key=="restart":
+         mdinfo.inputfile=val.strip()
+      elif key=="thermo":
+         mdinfo.thermo_output=val.strip()
+      elif key=="coord":
+         mdinfo.coord_output=val.strip()
+      else:
+         raise ValueError('Could not find option %s' % key)
+   fp.close()
+
 def screen_input(mdinfo):
    print "Number of atoms"
    mdinfo.natoms=int(raw_input())

@@ -1,12 +1,12 @@
-2916              # natoms
-39.948            # mass in AMU
-0.2379            # epsilon in kcal/mol
-3.405             # sigma in angstrom
-12.0              # rcut in angstrom
-51.4740           # box length (in angstrom)
-argon_2916.rest   # restart
-argon_2916.xyz    # coord_output
-argon_2916.dat    # thermo_output file
-1000              # nr MD steps
-5.0               # MD time step (in fs)
-10                # output print frequency
+natoms 2916              # natoms
+mass 39.948            # mass in AMU
+epsilon 0.2379            # epsilon in kcal/mol
+sigma 3.405             # sigma in angstrom
+rcut 12.0              # rcut in angstrom
+boxlength 51.4740           # box length (in angstrom)
+restart argon_2916.rest   # restart
+coord argon_2916.xyz    # coord_output
+thermo argon_2916.dat    # thermo_output file
+nsteps 1000              # nr MD steps
+timestep 5.0               # MD time step (in fs)
+print 10                # output print frequency
