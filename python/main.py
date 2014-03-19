@@ -11,6 +11,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-g", "--gui", help="gui interface",
                     action="store_true")
+parser.add_argument("-p", "--parallel", help="parallel computing",
+                    action="store_true")
 args = parser.parse_args()
 
 #md=CDLL("../libljmd-serial.so")
@@ -44,8 +46,12 @@ if __name__ == "__main__":
    else:
       mdsys.file_input(sys.argv[1])
 
-#   mdsys.nthreads=1 #Because we are running in serial mode
-   mdsys.nthreads=8 #Because we are running in parallel mode
+   # choice the type of computing
+   if args.parallel:
+      mdsys.nthreads=8 #Because we are running in parallel mode
+   else:
+      mdsys.nthreads=1 #Because we are running in serial mode
+
 
    mdsys.allocate_arrays()
    mdsys.read_restart()
