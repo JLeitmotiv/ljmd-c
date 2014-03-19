@@ -123,9 +123,9 @@ class mdsys_t(Structure):
             elif key=="restart":
                self.inputfile=val.strip()
             elif key=="thermo":
-               self.file_therm = open(val.strip(),'w+r')
+               self.file_therm = open(val.strip(),'w')
             elif key=="coord":
-               self.file_coord = open(val.strip(),'w+r')
+               self.file_coord = open(val.strip(),'w')
             else:
                raise ValueError('Could not find option %s' % key)
 

@@ -6,17 +6,22 @@ from result import Result
 from md_classes import mdsys_t
 from interface import Application
 from Tkinter import *
-'''
+
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-g", "--gui", help="gui interface",
                     action="store_true")
-parser.add_argument("-p", "--parallel", help="parallel computing",
-                    action="store_true")
-parser.add_argument("-f", "--file", help="input file",
-                    action="store_true")
 args = parser.parse_args()
 
+
+#md=CDLL("../libljmd-serial.so")
+md=CDLL("../libljmd-parallel.so")
+
+if __name__ == "__main__":
+   cellfreq=4;
+   mdsys=mdsys_t()
+   if len(sys.argv)==1:
+      mdsys.screen_input()
    elif args.gui:
       root = Tk()
       root.title("A simple gui interface for LJMD")
@@ -35,27 +40,15 @@ args = parser.parse_args()
       mdsys.dt = float(app.dt)
       mdsys.nprint = int(app.nprint)
       mdsys.inputfile = app.restfile
-      mdsys.file_coord = app.trajfile
-      mdsys.file_therm = app.ergfile
-
-'''
-
-#md=CDLL("../libljmd-serial.so")
-md=CDLL("../libljmd-parallel.so")
-
-if __name__ == "__main__":
-   cellfreq=4;
-   mdsys=mdsys_t()
-   if len(sys.argv)==1:
-      mdsys.screen_input()
+      mdsys.file_coord = open(app.trajfile,'w')
+      mdsys.file_therm = open(app.ergfile,'w')
    else:
       mdsys.file_input(sys.argv[1])
 
    # choice the type of computing
-#   if args.parallel:
    mdsys.nthreads=8 #Because we are running in parallel mode
-#   else:
-#      mdsys.nthreads=1 #Because we are running in serial mode
+   # mdsys.nthreads=1 #Because we are running in serial mode
+
    mdsys.allocate_arrays()
    mdsys.read_restart()
    
@@ -81,8 +74,6 @@ if __name__ == "__main__":
       if (i % cellfreq == 0):
          md.updcells(byref(mdsys))
 
-   # fetch the data from file 
-#   (time, temp, Ekin, Epot, Etot) = np.loadtxt(mdsys.file_therm, unpack = True)
-   ###--- the variables are loaded
+   ###--- the variables are loaded for plot
    result = Result(time,mdsys.temp_out,mdsys.ekin_out,mdsys.epot_out,mdsys.etot_out)
    result.graph()
