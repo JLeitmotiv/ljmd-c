@@ -5,7 +5,7 @@ CFLAGS=-Wall -g -O3 -ffast-math -fomit-frame-pointer -fPIC
 LDLIBS=-lm
 
 # list of source files
-SRC=evolution.c force.c helper.c list_cell.c velverlet.c
+SRC=evolution.c force.c helper.c list_cell.c 
 VPATH=../src
 OBJ=$(SRC:%.c=%.o)
 
@@ -22,5 +22,5 @@ clean:
 	$(CC) -o $@ $(CFLAGS) $^ -shared $(LDLIBS)
 
 # compilation pattern rule for objects
-%.o: %.c
+%.o: %.c %.h
 	$(CC) -c $(CFLAGS) $<
