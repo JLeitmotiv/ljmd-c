@@ -9,5 +9,7 @@
 ----------------------------------------------------
 
 [ ]: add a LUT potential
-[ ]: add different integrators methods
+[-]: add different integrators methods
+    (X)write code  
+    ( )make python use it 
 [ ]: add different atom types
