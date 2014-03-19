@@ -4,6 +4,14 @@ import numpy as np
 from ctypes import *
 from result import Result
 from md_classes import mdsys_t
+from interface import Application
+from Tkinter import *
+
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("-g", "--gui", help="gui interface",
+                    action="store_true")
+args = parser.parse_args()
 
 #md=CDLL("../libljmd-serial.so")
 md=CDLL("../libljmd-parallel.so")
@@ -13,6 +21,26 @@ if __name__ == "__main__":
    mdsys=mdsys_t()
    if len(sys.argv)==1:
       mdsys.screen_input()
+   elif args.gui:
+      root = Tk()
+      root.title("A simple gui interface for LJMD")
+      root.geometry("750x400")
+      app = Application(root)
+      app.grid()
+      root.mainloop()
+
+      mdsys.natoms = app.natoms
+      mdsys.mass = app.mass
+      mdsys.epsilon = app.epsilon
+      mdsys.sigma = app.sigma
+      mdsys.rcut = app.rcut
+      mdsys.box = app.box
+      mdsys.nsteps = app.nsteps
+      mdsys.dt = app.dt
+      mdsys.nprint = app.nprint
+      mdsys.restfile = app.restfile
+      mdsys.trajfile = app.trajfile
+      mdsys.output = app.ergfile
    else:
       mdsys.file_input(sys.argv[1])
 
