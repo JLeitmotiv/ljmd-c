@@ -1,5 +1,8 @@
 #include "list_cell.h"
 
+/* ratio between cutoff radius and length of a cell */
+const double cellrat=2.0;
+
 
 /* release cell list storage */
 void free_cell_list(mdsys_t *sys)

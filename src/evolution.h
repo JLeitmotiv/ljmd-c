@@ -2,8 +2,10 @@
 #define EVOLUTION_H
 
 #include "mdsys.h"
+#include "force.h"
 
 void first_step(mdsys_t *sys);
 void final_step(mdsys_t *sys);
 void ekin(mdsys_t *sys);
+void velverlet(mdsys_t *sys);
 #endif

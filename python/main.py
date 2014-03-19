@@ -14,12 +14,14 @@ parser.add_argument("-g", "--gui", help="gui interface",
 args = parser.parse_args()
 
 
+import time
 #md=CDLL("../libljmd-serial.so")
 md=CDLL("../libljmd-parallel.so")
 
 if __name__ == "__main__":
    cellfreq=4;
    mdsys=mdsys_t()
+   md.start_threads(byref(mdsys))
    if len(sys.argv)==1:
       mdsys.screen_input()
    elif args.gui:
@@ -45,13 +47,8 @@ if __name__ == "__main__":
    else:
       mdsys.file_input(sys.argv[1])
 
-   # choice the type of computing
-   mdsys.nthreads=8 #Because we are running in parallel mode
-   # mdsys.nthreads=1 #Because we are running in serial mode
-
    mdsys.allocate_arrays()
    mdsys.read_restart()
-   
    md.updcells(byref(mdsys));
    md.ekin(byref(mdsys));
    md.force(byref(mdsys));

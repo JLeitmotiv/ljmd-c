@@ -1,11 +1,11 @@
 # -*- Makefile -*-
 SHELL=/bin/sh
 CC=gcc
-CFLAGS=-fopenmp -Wall -g -O3 -ffast-math -fomit-frame-pointer -fPIC
+CFLAGS=-fopenmp -g -Wall -O3 -ffast-math -fomit-frame-pointer -fPIC
 LDLIBS=-lm
 
 # list of source files
-SRC=evolution.c force.c helper.c list_cell.c velverlet.c
+SRC=evolution.c force.c helper.c list_cell.c
 VPATH=../src
 OBJ=$(SRC:%.c=%.o)
 
@@ -24,3 +24,5 @@ clean:
 # compilation pattern rule for objects
 %.o: %.c
 	$(CC) -c $(CFLAGS) $<
+
+%.c: %.h
