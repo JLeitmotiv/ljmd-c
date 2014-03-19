@@ -5,7 +5,7 @@
 [ ]: Makefiles and c-code
    ( ): remove the warnings and check that Makefiles work properly
    ( ): refactor mdsys class in both c and python to remove unneeded info (like nfi, ncellfreq, and such)
-[ ]: clean and sanitize main.py inputs
+[X]: clean and sanitize main.py inputs
 ----------------------------------------------------
 
 [ ]: add a LUT potential
