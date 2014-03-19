@@ -1,11 +1,10 @@
-/* helper function: apply minimum image convention */
-//__attribute__((always_inline,pure))
-static double pbc(double x, const double boxby2, const double box);
+#include "mdsys.h"
+#include "stdlib.h"
+#if defined(_OPENMP)
+#include <omp.h>
+#endif
 
-/* helper function: zero out an array */
-
-//__attribute__((always_inline))
-static void azzero(double *d, const int n);
-
-//helper function: gaussian distributio
-static double gauss(double sigmaa);
+double pbc(double x, const double boxby2, const double box);
+double gauss(double sigmaa);
+void azzero(double *d, const int n);
+void start_threads(mdsys_t *sys);

@@ -1,6 +1,4 @@
 #include "evolution.h"
-#include "stdlib.h" 
-
 double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
 const double kboltz=0.0019872067;     /* boltzman constant in kcal/mol/K */
 
@@ -38,7 +36,6 @@ void ekin(mdsys_t *sys)
   sys->ekin *= 0.5*mvsq2e*sys->mass;
   sys->tempout  = 2.0*sys->ekin/(3.0*sys->natoms-3.0)/kboltz;
 }
-
 void andersen(mdsys_t *sys)
 {
   int i;
@@ -49,4 +46,12 @@ void andersen(mdsys_t *sys)
         sys->vel[i]=gauss(sys->sigma);
       }
   }
+void velverlet(mdsys_t *sys)
+{
+  /* first part: propagate velocities by half and positions by full step */
+  first_step(sys);
+  /* compute forces and potential energy */
+  force(sys);
+  /* second part: propagate velocities by another half step */
+  final_step(sys);
 }

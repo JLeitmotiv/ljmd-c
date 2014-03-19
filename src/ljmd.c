@@ -3,22 +3,7 @@
  * units: Length=Angstrom, Mass=amu; Energy=kcal
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <math.h>
-#include "helper.h"
-
-#include "mdsys.h"
-//#include "evolution.h"
-#if defined(_OPENMP)
-#include <omp.h>
-#endif
-
-/* generic file- or pathname buffer length */
-#define BLEN 200
-
+#include "ljmd.h"
 /* a few physical constants */
 /* number of MD steps between cell list updates */
 const int cellfreq=4;

@@ -1,4 +1,4 @@
-#include "stdlib.h" 
+#include "helper.h"
 __attribute__((always_inline,pure))
 double pbc(double x, const double boxby2, const double box)
 {
@@ -31,4 +31,16 @@ double gauss(double sigmaa)
    return l;
 }
 
-
+void start_threads(mdsys_t *sys)
+{
+#if defined(_OPENMP)
+#pragma omp parallel
+  {
+    if(0 == omp_get_thread_num()) {
+      sys->nthreads=omp_get_num_threads();
+    }
+  }
+#else
+  sys->nthreads=1;
+#endif
+}
