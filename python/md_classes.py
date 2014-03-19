@@ -123,9 +123,9 @@ class mdsys_t(Structure):
             elif key=="restart":
                self.inputfile=val.strip()
             elif key=="thermo":
-               self.file_therm = open(val.strip(),'w')
+               self.file_therm = open(val.strip(),'w+r')
             elif key=="coord":
-               self.file_coord = open(val.strip(),'w')
+               self.file_coord = open(val.strip(),'w+r')
             else:
                raise ValueError('Could not find option %s' % key)
 
@@ -151,7 +151,7 @@ class mdsys_t(Structure):
       print "input file"
       self.inputfile=raw_input()
       print "thermo_output file"
-      self.file_thermo = open(raw_input(), 'w')
+      self.file_therm = open(raw_input(), 'w')
       print "coord_output"
       self.file_coord  = open(raw_input(), 'w')
 
@@ -159,6 +159,12 @@ class mdsys_t(Structure):
       self.file_therm.write("%8d %20.8f %20.8f %20.8f %20.8f\n" %
                             (step,self.temp,self.ekin,
                              self.epot,self.ekin+self.epot))
+
+      self.temp_out.append(self.temp)
+      self.ekin_out.append(self.ekin)
+      self.epot_out.append(self.epot)
+      self.etot_out.append(self.ekin+self.epot)
+
       self.file_coord.write("%d\n nfi=%d etot=%20.8f\n"% 
                             (self.natoms,step,
                              self.ekin+self.epot))
