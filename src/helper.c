@@ -17,17 +17,19 @@ void azzero(double *d, const int n)
 }
 
 __attribute__((always_inline))
-double gauss(double sigmaa)
+double gauss(double var)
 {
-   int r=2;
+   double r=2.0;
    double v1,v2,l;
    while(r>1){
-    v1=2*(rand()/(RAND_MAX))-1;
-    v2=2*(rand()/(RAND_MAX))-1;
+    v1=(float)rand()/(RAND_MAX);
+    v2=(float)rand()/(RAND_MAX);
+    v1=2*v1-1;
+    v2=2*v2-1;
     r=v1*v1+v2*v2;
    }
    l=v1*pow(-2*log(r)/r,0.5);
-   l=sigmaa*l;
+   l=var*l;
    return l;
 }
 

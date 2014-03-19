@@ -7,8 +7,9 @@
 /* a few physical constants */
 /* number of MD steps between cell list updates */
 const int cellfreq=4;
-
+extern double kboltz;
 extern double mvsq2e;
+
 
 /* helper function: read a line and then return
    the first string with whitespace stripped off */
@@ -45,7 +46,7 @@ static void output(mdsys_t *sys, FILE *erg, FILE *traj)
   int i,natoms;
   natoms=sys->natoms;
     
-  //printf("% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
+  printf("% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->tempout, sys->ekin, sys->epot, sys->ekin+sys->epot);
   fprintf(erg,"% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->tempout, sys->ekin, sys->epot, sys->ekin+sys->epot);
   fprintf(traj,"%d\n nfi=%d etot=%20.8f\n", sys->natoms, sys->nfi, sys->ekin+sys->epot);
   for (i=0; i<natoms; ++i) {
@@ -126,7 +127,8 @@ int main(int argc, char **argv)
   }
 
   /* initialize forces and energies.*/
-  if(sys.tempin==0){
+  
+  if((int)sys.tempin==0){
      ander=0;
   }else{
      ander=1;
@@ -135,10 +137,11 @@ int main(int argc, char **argv)
   sys.clist=NULL;
   sys.plist=NULL;
   updcells(&sys);
-  sys.sigma=pow(sys.tempin,0.5);
+  sys.var_andersen=pow(kboltz*sys.tempin/mvsq2e/sys.mass,0.5);
   force(&sys);
   ekin(&sys);
       
+  printf("%20.6f\n", gauss(sys.var_andersen));
   erg=fopen(ergfile,"w");
   traj=fopen(trajfile,"w");
 
@@ -157,7 +160,8 @@ int main(int argc, char **argv)
     /* propagate system and recompute energies */
     velverlet(&sys);
     ekin(&sys);
-    if(ander!=0) andersen(&sys);
+   // if(ander!=0)
+     andersen(&sys);
 
     /* update cell list */
     if ((sys.nfi % cellfreq) == 0) 

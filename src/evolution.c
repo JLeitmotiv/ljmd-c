@@ -1,6 +1,7 @@
 #include "evolution.h"
+
 double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
-const double kboltz=0.0019872067;     /* boltzman constant in kcal/mol/K */
+const double kboltz=0.0019872067;
 
 void first_step(mdsys_t *sys)
 {
@@ -41,11 +42,12 @@ void andersen(mdsys_t *sys)
   int i;
   double r;
   for(i =0;i<3*sys->natoms; ++i){
-      r = rand()/(RAND_MAX);
+      r = (float) rand()/(RAND_MAX);
       if(r<sys->nu*sys->dt){
-        sys->vel[i]=gauss(sys->sigma);
+        sys->vel[i]=gauss(sys->var_andersen);
       }
   }
+}
 void velverlet(mdsys_t *sys)
 {
   /* first part: propagate velocities by half and positions by full step */
