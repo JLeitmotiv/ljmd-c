@@ -7,7 +7,7 @@
  * about the MD system */
 struct _mdsys {
   double dt, mass, epsilon, sigma, box, rcut;
-  double ekin, epot, temp, _pad1;
+  double ekin, epot, tempin, _pad1,tempout,nu;
   double *pos, *vel, *frc;
   cell_t *clist;
   int *plist, _pad2;

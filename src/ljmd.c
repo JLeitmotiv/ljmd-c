@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
+#include "helper.h"
 
 #include "mdsys.h"
 //#include "evolution.h"
@@ -60,7 +61,7 @@ static void output(mdsys_t *sys, FILE *erg, FILE *traj)
   natoms=sys->natoms;
     
   //printf("% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
-  fprintf(erg,"% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
+  fprintf(erg,"% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->tempout, sys->ekin, sys->epot, sys->ekin+sys->epot);
   fprintf(traj,"%d\n nfi=%d etot=%20.8f\n", sys->natoms, sys->nfi, sys->ekin+sys->epot);
   for (i=0; i<natoms; ++i) {
     fprintf(traj, "Ar  %20.8f %20.8f %20.8f\n", sys->pos[i], sys->pos[natoms+i], sys->pos[2*natoms+i]);
@@ -71,7 +72,7 @@ static void output(mdsys_t *sys, FILE *erg, FILE *traj)
 /* main */
 int main(int argc, char **argv) 
 {
-  int nprint, i;
+  int nprint, i,ander=0;
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
   FILE *fp,*traj,*erg;
   mdsys_t sys;
@@ -110,6 +111,10 @@ int main(int argc, char **argv)
   sys.dt=atof(line);
   if(get_a_line(stdin,line)) return 1;
   nprint=atoi(line);
+  if(get_a_line(stdin,line)) return 1;
+  sys.tempin=atof(line);
+  if(get_a_line(stdin,line)) return 1;
+  sys.nu=atof(line);
 
   /* allocate memory */
   sys.pos=(double *)malloc(3*sys.natoms*sizeof(double));
@@ -136,13 +141,19 @@ int main(int argc, char **argv)
   }
 
   /* initialize forces and energies.*/
+  if(sys.tempin==0){
+     ander=0;
+  }else{
+     ander=1;
+  }
   sys.nfi=0;
   sys.clist=NULL;
   sys.plist=NULL;
   updcells(&sys);
+  sys.sigma=pow(sys.tempin,0.5);
   force(&sys);
   ekin(&sys);
-    
+      
   erg=fopen(ergfile,"w");
   traj=fopen(trajfile,"w");
 
@@ -161,6 +172,7 @@ int main(int argc, char **argv)
     /* propagate system and recompute energies */
     velverlet(&sys);
     ekin(&sys);
+    if(ander!=0) andersen(&sys);
 
     /* update cell list */
     if ((sys.nfi % cellfreq) == 0) 

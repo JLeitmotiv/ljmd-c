@@ -6,3 +6,6 @@ static double pbc(double x, const double boxby2, const double box);
 
 //__attribute__((always_inline))
 static void azzero(double *d, const int n);
+
+//helper function: gaussian distributio
+static double gauss(double sigmaa);

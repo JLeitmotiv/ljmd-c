@@ -7,5 +7,4 @@
 
 extern int mvsq2e;
 void velverlet(mdsys_t *sys);
-
 #endif

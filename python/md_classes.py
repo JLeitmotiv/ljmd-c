@@ -151,7 +151,7 @@ class mdsys_t(Structure):
       print "input file"
       self.inputfile=raw_input()
       print "thermo_output file"
-      self.file_thermo = open(raw_input(), 'w')
+      self.file_therm = open(raw_input(), 'w')
       print "coord_output"
       self.file_coord  = open(raw_input(), 'w')
 
