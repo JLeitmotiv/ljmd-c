@@ -80,11 +80,11 @@ int main(int argc, char **argv)
   if(get_a_line(stdin,line)) return 1;
   sys.mass=atof(line);
   if(get_a_line(stdin,line)) return 1;
-  sys.epsilon=atof(line);
+  atof(line);
   if(get_a_line(stdin,line)) return 1;
-  sys.sigma=atof(line);
+  atof(line);
   if(get_a_line(stdin,line)) return 1;
-  sys.rcut=atof(line);
+  atof(line);
   if(get_a_line(stdin,line)) return 1;
   sys.box=atof(line);
   if(get_a_line(stdin,restfile)) return 1;

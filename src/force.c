@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "force.h"
 
 /* compute forces */
@@ -9,15 +11,15 @@ void force(mdsys_t *sys)
 #pragma omp parallel reduction(+:epot)
 #endif
     {
-        double c12,c6,boxby2,rcsq;
+        double boxby2,rcsq;
+        double rcoresq;
         double *fx, *fy, *fz;
         const double *rx, *ry, *rz;
         int i, tid, fromidx, toidx, natoms;
 
         /* precompute some constants */
-        c12 = 4.0*sys->epsilon*pow(sys->sigma,12.0);
-        c6  = 4.0*sys->epsilon*pow(sys->sigma, 6.0);
         rcsq= sys->rcut * sys->rcut;
+        rcoresq = sys->r[0] * sys->r[0];
         boxby2 = 0.5*sys->box;
         natoms = sys->natoms;
         epot = 0.0;
@@ -69,13 +71,16 @@ void force(mdsys_t *sys)
 
                     /* compute force and energy if within cutoff */
                     if (rsq < rcsq) {
-                        double r6,rinv,ffac;
-
-                        rinv=1.0/rsq;
-                        r6=rinv*rinv*rinv;
-                    
-                        ffac = (12.0*c12*r6 - 6.0*c6)*r6*rinv;
-                        epot += r6*(c12*r6 - c6);
+                        int k;
+                        double dist, ffac;
+                        if (rsq < rcoresq) {
+                           printf("Pair distance less than table defined"); 
+                           exit(1);
+                        }
+                        dist = sqrt(rsq);
+                        k = (int) dist*sys->npoints/sys->rcut;
+                        epot += sys->V[k];
+                        ffac = sys->F[k]/dist;
 
                         fx[ii] += rx2*ffac;
                         fy[ii] += ry2*ffac;
@@ -121,13 +126,16 @@ void force(mdsys_t *sys)
                 
                     /* compute force and energy if within cutoff */
                     if (rsq < rcsq) {
-                        double r6,rinv,ffac;
-
-                        rinv=1.0/rsq;
-                        r6=rinv*rinv*rinv;
-                    
-                        ffac = (12.0*c12*r6 - 6.0*c6)*r6*rinv;
-                        epot += r6*(c12*r6 - c6);
+                        int k;
+                        double dist, ffac;
+                        if (rsq < rcoresq) {
+                           printf("Pair distance less than table defined"); 
+                           exit(1);
+                        }
+                        dist = sqrt(rsq);
+                        k = (int) dist*sys->npoints/sys->rcut;
+                        epot += sys->V[k];
+                        ffac = sys->F[k]/dist;
 
                         fx[ii] += rx2*ffac;
                         fy[ii] += ry2*ffac;

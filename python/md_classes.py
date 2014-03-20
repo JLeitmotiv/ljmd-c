@@ -29,19 +29,38 @@ It also adds the parser and input methods
 """
 
 from ctypes import *
+from create_potential import *
 
 class cell_t(Structure):
    _fields_ = [("natoms", c_int),
                ("owner", c_int),
                ("idxlist", POINTER(c_int))]
    
+class pot_t(Structure):
+   _fields_ = [("npoints", c_int),
+               ("r", POINTER(c_double)),
+               ("V", POINTER(c_double)),
+               ("F", POINTER(c_double)),
+               ("rcut", c_double)]
+
+   def create_table(self, Potential):
+	self.npoints = len(r)
+	self.r = Potential.r.ctypes.data_as(POINTER(c_float))
+	self.V = Potential.V.ctypes.data_as(POINTER(c_double))
+	self.F = Potential.F.ctypes.data_as(POINTER(c_double))
+        self.rcut = Potential.r[:-1]
+
+   
+
 class mdsys_t(Structure):
-   _fields_ = [("dt", c_double),
-               ("mass", c_double),
-               ("epsilon", c_double),
-               ("sigma", c_double),
-               ("box", c_double),
+   _fields_ = [("clist", POINTER(cell_t)),
+               ("npoints", c_int),
+               ("r", POINTER(c_double)),
+               ("V", POINTER(c_double)),
+               ("F", POINTER(c_double)),
                ("rcut", c_double),
+               ("mass", c_double),
+               ("box", c_double),
                ("ekin", c_double),
                ("epot", c_double),
                ("temp", c_double),
@@ -49,7 +68,7 @@ class mdsys_t(Structure):
                ("pos", POINTER(c_double)),
                ("vel", POINTER(c_double)),
                ("frc", POINTER(c_double)),
-               ("clist", POINTER(cell_t)),
+               ("dt", c_double),
                ("plist", POINTER(c_int)),
                ("_pad2", c_int),
                ("natoms", c_int),
@@ -61,12 +80,15 @@ class mdsys_t(Structure):
                ("npair", c_int),
                ("nidx", c_int),
                ("delta", c_double)]
+               
    def __init__(self):
       self.nfi=0
       self.clist=None
       self.plist=None
+#      self.table.create_table(Potential)
 
    def allocate_arrays(self):
+      print self.natoms
       self.pos=(c_double * (self.natoms * 3) )()
       self.vel=(c_double * (self.natoms * 3) )()
       self.frc=(c_double * (self.nthreads * self.natoms * 3) )()

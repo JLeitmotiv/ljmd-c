@@ -19,8 +19,9 @@ import time
 md=CDLL("../libljmd-parallel.so")
 
 if __name__ == "__main__":
+   LJPot = LennardJones(2.5, 1000, 1.0, 1.0)
    cellfreq=4;
-   mdsys=mdsys_t()
+   mdsys=mdsys_t(LJPot)
    md.start_threads(byref(mdsys))
    if len(sys.argv)==1:
       mdsys.screen_input()
