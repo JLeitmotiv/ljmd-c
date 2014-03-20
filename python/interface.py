@@ -22,6 +22,36 @@ class Application(Frame):
 
 	self.short_description = ''
 
+	# for radiobutton of potential
+	self.v = IntVar()
+	self.v.set(1)  
+
+	self.potential = [
+	    (1, "Lennard Jones"),
+	    (2, "Morse"),
+	    (3, "Home Made")
+	]
+	self.ch_pot = ''
+
+	# for radiobutton of integrator
+	self.integrator = IntVar()
+	self.integrator.set(1)  
+
+	self.intg = [
+	    (1, "Verlet"),
+	    (2, "Integrator 2")
+	]
+	self.ch_intg = ''
+
+	# for radiobutton of Thermostate
+	self.thermostate = IntVar()
+	self.thermostate.set(1)  
+
+	self.th_state = [
+	    (1, "Andersen"),
+	    (2, "Thermostate 2")
+	]
+	self.ch_state = ''
 
         self.grid()
         self.widget()
@@ -121,15 +151,40 @@ Please give the input parameter
 	self.ergfile_entry.insert(END, self.ergfile)
         self.ergfile_entry.grid(row=3, column=3, sticky=W, pady=4)
 
+	# radio potential
+        self.potential_label = Label(self, text = "Choice Potential: ")
+        self.potential_label.grid(row=4, column=2, sticky=W, pady=4)
+	for val, txt in self.potential:
+    	    Radiobutton(self, 
+                text=txt,
+                variable=self.v, 
+                value=val).grid(row=val+3, column=3, sticky=W, pady=4)
+
+	# radio integrator
+        self.intg_label = Label(self, text = "Choice Integrator: ")
+        self.intg_label.grid(row=7, column=2, sticky=W, pady=4)
+	for val, txt in self.intg:
+    	    Radiobutton(self, 
+                text=txt,
+                variable=self.integrator, 
+                value=val).grid(row=val+6, column=3, sticky=W, pady=4)
+
+	# radio thermostate
+        self.intg_label = Label(self, text = "Choice Thermostate: ")
+        self.intg_label.grid(row=9, column=2, sticky=W, pady=4)
+	for val, txt in self.th_state:
+    	    Radiobutton(self, 
+                text=txt,
+                variable=self.thermostate, 
+                value=val).grid(row=val+8, column=3, sticky=W, pady=4)
+
 	# Information 
         self.info_label = Label(self, text = "It is project in the workshop at ICTP")
         self.info_label.grid()
 
 	# run button 
         self.button_run = Button(self, text = "run", command=self.on_run)
-        self.button_run.grid(row=10, column=3, sticky=W, pady=4)
-
-
+        self.button_run.grid(row=11, column=3, sticky=W, pady=4)
 
     def on_run(self):
 	self.natoms = self.natoms_entry.get()
@@ -144,8 +199,11 @@ Please give the input parameter
         self.restfile = self.restfile_entry.get()
         self.trajfile = self.trajfile_entry.get()
         self.ergfile = self.ergfile_entry.get()
+	self.ch_pot = str(self.v.get())
+	self.ch_intg = str(self.integrator.get())
+	self.ch_state = str(self.thermostate.get())
 
-	self.short_description = 'number of atoms: ' + self.natoms + '\nmass in amu: ' + self.mass + '\nepsilon: ' + self.epsilon + '\nsigma: ' + self.sigma + '\nrcut: ' + self.rcut + '\nbox length: ' + self.box + '\nnumber of steps: ' + self.nsteps + '\ntime interval: ' + self.dt + '\noutput frequency: ' + self.nprint + '\nrestart file: ' + self.restfile + '\ntrajectory file: ' + self.trajfile + '\nOutput file: ' + self.ergfile
+	self.short_description = 'number of atoms: ' + self.natoms + '\nmass in amu: ' + self.mass + '\nepsilon: ' + self.epsilon + '\nsigma: ' + self.sigma + '\nrcut: ' + self.rcut + '\nbox length: ' + self.box + '\nnumber of steps: ' + self.nsteps + '\ntime interval: ' + self.dt + '\noutput frequency: ' + self.nprint + '\nrestart file: ' + self.restfile + '\ntrajectory file: ' + self.trajfile + '\nOutput file: ' + self.ergfile + '\nPotential: ' + self.ch_pot + '\nIntegrator: ' + self.ch_intg + '\nThermostate: ' + self.ch_state
 
 	# Confirmation message
 	if tkMessageBox.askyesno("Are you sure?", self.short_description):
