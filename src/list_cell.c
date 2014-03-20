@@ -32,7 +32,7 @@ void updcells(mdsys_t *sys)
   if (sys->clist == NULL) {
     int nidx;
         
-    ngrid  = floor(cellrat * sys->box / sys->rcut);
+    ngrid  = floor(cellrat * sys->box / sys->ptable.rcut);
     ncell  = ngrid*ngrid*ngrid;
     delta  = sys->box / ngrid;
     boxoffs= boxby2 - 0.5*delta;
@@ -77,17 +77,17 @@ void updcells(mdsys_t *sys)
 	rz=pbc(z1 - z2, boxby2, sys->box);
 
 	/* check for cells on a line that are too far apart */
-	if (fabs(rx) > sys->rcut+delta) continue;
-	if (fabs(ry) > sys->rcut+delta) continue;
-	if (fabs(rz) > sys->rcut+delta) continue;
+	if (fabs(rx) > sys->ptable.rcut+delta) continue;
+	if (fabs(ry) > sys->ptable.rcut+delta) continue;
+	if (fabs(rz) > sys->ptable.rcut+delta) continue;
 
 	/* check for cells in a plane that are too far apart */
-	if (sqrt(rx*rx+ry*ry) > (sys->rcut+sqrt(2.0)*delta)) continue;
-	if (sqrt(rx*rx+rz*rz) > (sys->rcut+sqrt(2.0)*delta)) continue;
-	if (sqrt(ry*ry+rz*rz) > (sys->rcut+sqrt(2.0)*delta)) continue;
+	if (sqrt(rx*rx+ry*ry) > (sys->ptable.rcut+sqrt(2.0)*delta)) continue;
+	if (sqrt(rx*rx+rz*rz) > (sys->ptable.rcut+sqrt(2.0)*delta)) continue;
+	if (sqrt(ry*ry+rz*rz) > (sys->ptable.rcut+sqrt(2.0)*delta)) continue;
 
 	/* other cells that are too far apart */
-	if (sqrt(rx*rx + ry*ry + rz*rz) > (sqrt(3.0)*delta+sys->rcut)) continue;
+	if (sqrt(rx*rx + ry*ry + rz*rz) > (sqrt(3.0)*delta+sys->ptable.rcut)) continue;
                 
 	/* cells are close enough. add to list */
 	sys->plist[2*npair  ] = i;

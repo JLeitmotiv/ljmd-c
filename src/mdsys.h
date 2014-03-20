@@ -8,8 +8,7 @@
  * about the MD system */
 struct _mdsys {
   cell_t *clist;
-  int npoints;
-  double *r, *V, *F, rcut;
+  pot_t ptable;
   double dt, mass, box;
   double ekin, epot, temp, _pad1;
   double *pos, *vel, *frc;

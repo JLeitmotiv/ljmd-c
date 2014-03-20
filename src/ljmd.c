@@ -85,9 +85,9 @@ int main(int argc, char **argv)
   if(get_a_line(stdin,line)) return 1;
   sigma = atof(line);
   if(get_a_line(stdin,line)) return 1;
-  sys.rcut = atof(line);
+  sys.ptable.rcut = atof(line);
   if(get_a_line(stdin,line)) return 1;
-  sys.npoints = atoi(line);
+  sys.ptable.npoints = atoi(line);
   if(get_a_line(stdin,line)) return 1;
   sys.box=atof(line);
   if(get_a_line(stdin,restfile)) return 1;
@@ -105,16 +105,17 @@ int main(int argc, char **argv)
   sys.vel=(double *)malloc(3*sys.natoms*sizeof(double));
   sys.frc=(double *)malloc(sys.nthreads*3*sys.natoms*sizeof(double));
 
-  /* create table */
-  sys.r  =(double *)malloc(sys.npoints*sizeof(double));
-  sys.V  =(double *)malloc(sys.npoints*sizeof(double));
-  sys.F  =(double *)malloc(sys.npoints*sizeof(double));
+  /* allocate and create table */
+  sys.ptable.r  =(double *)malloc(sys.ptable.npoints*sizeof(double));
+  sys.ptable.V  =(double *)malloc(sys.ptable.npoints*sizeof(double));
+  sys.ptable.F  =(double *)malloc(sys.ptable.npoints*sizeof(double));
   
-  for (i = 0; i < sys.npoints; i++){
-    sys.r[i] = (i + 1.0) / sys.npoints * sys.rcut;
-    sys.V[i] = 4 * epsilon * ( pow(sigma/sys.r[i], 12.0) - pow(sigma/sys.r[i], 6.0));
-    sys.F[i] = 4 * epsilon * ( 12 * pow(sigma/sys.r[i], 12.0) - 6* pow(sigma/sys.r[i], 6.0)) / sys.r[i];
+  for (i = 0; i < sys.ptable.npoints; i++){
+    sys.ptable.r[i] = (i + 1.0) / sys.ptable.npoints * sys.ptable.rcut;
+    sys.ptable.V[i] = 4 * epsilon * ( pow(sigma/sys.ptable.r[i], 12.0) - pow(sigma/sys.ptable.r[i], 6.0));
+    sys.ptable.F[i] = 4 * epsilon * ( 12 * pow(sigma/sys.ptable.r[i], 12.0) - 6* pow(sigma/sys.ptable.r[i], 6.0)) / sys.ptable.r[i];
   }
+
   /* read restart */
   fp=fopen(restfile,"r");
   if(fp) {

@@ -18,8 +18,8 @@ void force(mdsys_t *sys)
         int i, tid, fromidx, toidx, natoms;
 
         /* precompute some constants */
-        rcsq= sys->rcut * sys->rcut;
-        rcoresq = sys->r[0] * sys->r[0];
+        rcsq= sys->ptable.rcut * sys->ptable.rcut;
+        rcoresq = sys->ptable.r[0] * sys->ptable.r[0];
         boxby2 = 0.5*sys->box;
         natoms = sys->natoms;
         epot = 0.0;
@@ -78,9 +78,9 @@ void force(mdsys_t *sys)
                            exit(1);
                         }
                         dist = sqrt(rsq);
-                        k = (int) dist*sys->npoints/sys->rcut;
-                        epot += sys->V[k];
-                        ffac = sys->F[k]/dist;
+                        k = (int) dist*sys->ptable.npoints/sys->ptable.rcut;
+                        epot += sys->ptable.V[k];
+                        ffac = sys->ptable.F[k]/dist;
 
                         fx[ii] += rx2*ffac;
                         fy[ii] += ry2*ffac;
@@ -133,10 +133,10 @@ void force(mdsys_t *sys)
                            exit(1);
                         }
                         dist = sqrt(rsq);
-                        k = (int) (dist * sys->npoints / sys->rcut);
+                        k = (int) (dist * sys->ptable.npoints / sys->ptable.rcut);
                     
-                        epot += sys->V[k];
-                        ffac = sys->F[k]/dist;
+                        epot += sys->ptable.V[k];
+                        ffac = sys->ptable.F[k]/dist;
 
                         fx[ii] += rx2*ffac;
                         fy[ii] += ry2*ffac;
