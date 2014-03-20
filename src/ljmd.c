@@ -60,6 +60,7 @@ int main(int argc, char **argv)
 {
   int nprint, i,ander=0;
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
+  double sigma, epsilon;
   FILE *fp,*traj,*erg;
   mdsys_t sys;
 
@@ -81,11 +82,13 @@ int main(int argc, char **argv)
   if(get_a_line(stdin,line)) return 1;
   sys.mass=atof(line);
   if(get_a_line(stdin,line)) return 1;
-  sys.epsilon=atof(line);
+  epsilon = atof(line);
   if(get_a_line(stdin,line)) return 1;
-  sys.sigma=atof(line);
+  sigma = atof(line);
   if(get_a_line(stdin,line)) return 1;
-  sys.rcut=atof(line);
+  sys.ptable.rcut = atof(line);
+  if(get_a_line(stdin,line)) return 1;
+  sys.ptable.npoints = atoi(line);
   if(get_a_line(stdin,line)) return 1;
   sys.box=atof(line);
   if(get_a_line(stdin,restfile)) return 1;
@@ -107,6 +110,25 @@ int main(int argc, char **argv)
   sys.vel=(double *)malloc(3*sys.natoms*sizeof(double));
   sys.frc=(double *)malloc(sys.nthreads*3*sys.natoms*sizeof(double));
 
+  /* allocate and create table */
+  sys.ptable.r  =(double *)malloc(sys.ptable.npoints*sizeof(double));
+  sys.ptable.V  =(double *)malloc(sys.ptable.npoints*sizeof(double));
+  sys.ptable.F  =(double *)malloc(sys.ptable.npoints*sizeof(double));
+  
+  for (i = 0; i < sys.ptable.npoints; i++){
+    sys.ptable.r[i] = (i + 1.0) / sys.ptable.npoints * sys.ptable.rcut;
+    sys.ptable.V[i] = 4 * epsilon * ( pow(sigma/sys.ptable.r[i], 12.0) - pow(sigma/sys.ptable.r[i], 6.0));
+    sys.ptable.F[i] = 4 * epsilon * ( 12 * pow(sigma/sys.ptable.r[i], 12.0) - 6* pow(sigma/sys.ptable.r[i], 6.0)) / sys.ptable.r[i];
+  }
+
+  fp=fopen("table.dat", "w");
+  for (i = 0; i < sys.ptable.npoints; i++){
+    sys.ptable.r[i] = (i + 1.0) / sys.ptable.npoints * sys.ptable.rcut;
+    sys.ptable.V[i] = 4 * epsilon * ( pow(sigma/sys.ptable.r[i], 12.0) - pow(sigma/sys.ptable.r[i], 6.0));
+    sys.ptable.F[i] = 4 * epsilon * ( 12 * pow(sigma/sys.ptable.r[i], 12.0) - 6* pow(sigma/sys.ptable.r[i], 6.0)) / sys.ptable.r[i];
+    fprintf(fp, "%20g %20g %20g\n", sys.ptable.r[i], sys.ptable.F[i], sys.ptable.V[i]);
+  }
+  close(fp);
   /* read restart */
   fp=fopen(restfile,"r");
   if(fp) {
@@ -154,7 +176,7 @@ int main(int argc, char **argv)
   for(sys.nfi=1; sys.nfi <= sys.nsteps; ++sys.nfi) {
 
     /* write output, if requested */
-    if ((sys.nfi % nprint) == 0) 
+  //  if ((sys.nfi % nprint) == 0) 
       output(&sys, erg, traj);
 
     /* propagate system and recompute energies */
