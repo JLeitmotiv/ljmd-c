@@ -29,6 +29,8 @@ It also adds the parser and input methods
 """
 
 from ctypes import *
+from interface import Application
+from Tkinter import *
 
 class cell_t(Structure):
    _fields_ = [("natoms", c_int),
@@ -128,6 +130,26 @@ class mdsys_t(Structure):
                self.file_coord = open(val.strip(),'w')
             else:
                raise ValueError('Could not find option %s' % key)
+   def gui_input(self):
+      root = Tk()
+      root.title("A simple gui interface for LJMD")
+      root.geometry("750x400")
+      app = Application(root)
+      app.grid()
+      root.mainloop()
+
+      self.natoms = int(app.natoms)
+      self.mass = float(app.mass)
+      self.epsilon = float(app.epsilon)
+      self.sigma = float(app.sigma)
+      self.rcut = float(app.rcut)
+      self.box = float(app.box)
+      self.nsteps = int(app.nsteps)
+      self.dt = float(app.dt)
+      self.nprint = int(app.nprint)
+      self.inputfile = app.restfile
+      self.file_coord = open(app.trajfile,'w')
+      self.file_therm = open(app.ergfile,'w')
 
    def screen_input(self):
       print "Number of atoms"

@@ -4,8 +4,6 @@ import numpy as np
 from ctypes import *
 from result import Result
 from md_classes import mdsys_t
-from interface import Application
-from Tkinter import *
 
 import argparse
 parser = argparse.ArgumentParser()
@@ -25,25 +23,7 @@ if __name__ == "__main__":
    if len(sys.argv)==1:
       mdsys.screen_input()
    elif args.gui:
-      root = Tk()
-      root.title("A simple gui interface for LJMD")
-      root.geometry("750x400")
-      app = Application(root)
-      app.grid()
-      root.mainloop()
-
-      mdsys.natoms = int(app.natoms)
-      mdsys.mass = float(app.mass)
-      mdsys.epsilon = float(app.epsilon)
-      mdsys.sigma = float(app.sigma)
-      mdsys.rcut = float(app.rcut)
-      mdsys.box = float(app.box)
-      mdsys.nsteps = int(app.nsteps)
-      mdsys.dt = float(app.dt)
-      mdsys.nprint = int(app.nprint)
-      mdsys.inputfile = app.restfile
-      mdsys.file_coord = open(app.trajfile,'w')
-      mdsys.file_therm = open(app.ergfile,'w')
+      mdsys.gui_input()
    else:
       mdsys.file_input(args.file)
 
