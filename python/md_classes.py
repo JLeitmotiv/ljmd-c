@@ -125,7 +125,7 @@ class mdsys_t(Structure):
    def gui_input(self):
       root = Tk()
       root.title("A simple gui interface for LJMD")
-      root.geometry("750x400")
+      root.geometry("750x470")
       app = Application(root)
       app.grid()
       root.mainloop()
@@ -142,6 +142,10 @@ class mdsys_t(Structure):
       self.inputfile = app.restfile
       self.file_coord = open(app.trajfile,'w')
       self.file_therm = open(app.ergfile,'w')
+      self.var_andersen = app.var_andersen
+      self.thermostat = app.thermostat
+      self.tempin = app.tempin
+      self.nu = app.nu
 
    def screen_input(self):
       print "Number of atoms"

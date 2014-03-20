@@ -22,6 +22,12 @@ class Application(Frame):
         self.trajfile = 'argon_108.xyz'
         self.ergfile = 'argon_108.dat'
 
+        self.tempin = 95.0
+        self.nu = 0.1
+        self.thermostat = False
+        self.var_andersen = 0.0
+	self.check_andersen = ''
+
 	self.short_description = ''
 
 	# for radiobutton of potential
@@ -47,17 +53,48 @@ class Application(Frame):
 
 	# for radiobutton of Thermostate
 	self.thermostate = IntVar()
-	self.thermostate.set(1)  
+	self.thermostate.set(2)  
 
 	self.th_state = [
 	    (1, "Andersen"),
-	    (2, "Thermostate 2")
+	    (2, "None")
 	]
 	self.ch_state = ''
 
         self.grid()
         self.widget()
-#        self.on_run()
+	self.ShowChoice()
+
+    def ShowChoice(self):
+    	if (self.thermostate.get()==1):
+	    # Trajectory file
+            self.tempin_label = Label(self, text = "Temperature: ")
+            self.tempin_label.grid(row=10, column=2, sticky=W, pady=4)
+            self.tempin_entry = Entry(self, bg = "#fff")
+	    self.tempin_entry.insert(END, self.tempin)
+            self.tempin_entry.grid(row=10, column=3, sticky=W, pady=4)
+
+	    # Output energies file
+            self.nu_label = Label(self, text = "Frequency: ")
+            self.nu_label.grid(row=11, column=2, sticky=W, pady=4)
+            self.nu_entry = Entry(self, bg = "#fff")
+	    self.nu_entry.insert(END, self.nu)
+            self.nu_entry.grid(row=11, column=3, sticky=W, pady=4)
+
+    	    Radiobutton(self, 
+                text='None',
+                variable=self.thermostate,
+		command=self.ShowChoice, 
+                value=2).grid(row=12, column=3, sticky=W, pady=4)
+
+    def Andersen(self, master):
+    	if (self.thermostate.get()==1):
+            self.tempin=float(self.tempin_entry.get())
+            self.nu=float(self.nu_entry.get())
+            self.thermostat=True 
+            mvsq2e=2390.05736153349
+            kboltz=0.0019872067
+            self.var_andersen=(kboltz*self.tempin/mvsq2e/float(self.mass))**0.5
 
     def widget(self):
         self.description_text = '''
@@ -130,8 +167,6 @@ Please give the input parameter
 	self.nprint_entry.insert(END, self.nprint)
         self.nprint_entry.grid(row=9, column=1, sticky=W, pady=4)
 
-
-
 	# restart file
         self.restfile_label = Label(self, text = "Restfile (in *.rest): ")
         self.restfile_label.grid(row=1, column=2, sticky=W, pady=4)
@@ -177,7 +212,8 @@ Please give the input parameter
 	for val, txt in self.th_state:
     	    Radiobutton(self, 
                 text=txt,
-                variable=self.thermostate, 
+                variable=self.thermostate,
+		command=self.ShowChoice, 
                 value=val).grid(row=val+8, column=3, sticky=W, pady=4)
 
 	# Information 
@@ -186,7 +222,7 @@ Please give the input parameter
 
 	# run button 
         self.button_run = Button(self, text = "run", command=self.on_run)
-        self.button_run.grid(row=11, column=3, sticky=W, pady=4)
+        self.button_run.grid(row=13, column=3, sticky=W, pady=4)
 
     def on_run(self):
 	self.natoms = self.natoms_entry.get()
@@ -205,7 +241,15 @@ Please give the input parameter
 	self.ch_intg = str(self.integrator.get())
 	self.ch_state = str(self.thermostate.get())
 
-	self.short_description = 'number of atoms: ' + self.natoms + '\nmass in amu: ' + self.mass + '\nepsilon: ' + self.epsilon + '\nsigma: ' + self.sigma + '\nrcut: ' + self.rcut + '\nbox length: ' + self.box + '\nnumber of steps: ' + self.nsteps + '\ntime interval: ' + self.dt + '\noutput frequency: ' + self.nprint + '\nrestart file: ' + self.restfile + '\ntrajectory file: ' + self.trajfile + '\nOutput file: ' + self.ergfile + '\nPotential: ' + self.ch_pot + '\nIntegrator: ' + self.ch_intg + '\nThermostate: ' + self.ch_state
+        a = self.potential[int(self.ch_pot)-1]
+	b = self.intg[int(self.ch_intg)-1]
+	c = self.th_state[int(self.ch_state)-1]
+
+    	if (self.thermostate.get()==1):
+	    self.Andersen(self)
+	    self.check_andersen = '\nAndersen: ' + str(self.var_andersen)
+
+	self.short_description = 'number of atoms: ' + self.natoms + '\nmass in amu: ' + self.mass + '\nepsilon: ' + self.epsilon + '\nsigma: ' + self.sigma + '\nrcut: ' + self.rcut + '\nbox length: ' + self.box + '\nnumber of steps: ' + self.nsteps + '\ntime interval: ' + self.dt + '\noutput frequency: ' + self.nprint + '\nrestart file: ' + self.restfile + '\ntrajectory file: ' + self.trajfile + '\nOutput file: ' + self.ergfile + '\nPotential: ' + a[1] + '\nIntegrator: ' + b[1] + '\nThermostate: ' + c[1] + self.check_andersen
 
 	# Confirmation message
 	if tkMessageBox.askyesno("Are you sure?", self.short_description):
