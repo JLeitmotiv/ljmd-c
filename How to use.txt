@@ -3,24 +3,40 @@ Description:
 This is a simple program for the simulation of Molecular Dynamics.
 The C program is interfaces with python.
 
+Features:
+-----------------------------------
+	* Input file
+	* GUI interface
+	* Potentials:
+	     - Lennard Jones
+	     - Morse
+	     - Home Made (Tabular Form) (Not Completed)
+	* Integrator:
+	     - Verlet Integrator
+	     - Runge Kutta Integrator (Not Completed)
+	* Thermostate calculation
+	     - Andersen
+
 A) How to use?
 -----------------------------------
 1. Comile: First of all, it is needed to be compiled. 
 to compile: 
 	make
+This will build the serial and parallel dynamic library that is to
+be bound with the python file
 
-2. Go to python folder by typing:
-	cd python
 
-3. Run: this program is capable of taking 3 different types of input
-from the user i.e, screen, file and GUI. to run screen type:
-	./main.py
+2. Run: This program is capable of taking 3 different types of input
+from the user i.e, screen, file and GUI. To run, go in python folder 
+and
+
+to run screen:
+	$ ./main.py
 to input a file:
-	./main.py -f <filename.inp>
-	./main.py --file <filename.inp>
+	$ ./main.py -f [--file] <filename.inp>
 to use GUI:
-	./main.py -g
-	./main.py --gui
+	$ ./main.py -g [--gui]
+
 
 B) Format of input file with the extension *.inp :
 -------------------------------------
@@ -36,7 +52,13 @@ thermo argon_108.dat   # thermo_output
 nsteps 10000           # nr MD steps
 timestep 5.0           # MD time step (in fs)
 print 100              # output print frequency
-Andersen 95 0.1	       # thermostate 
+
+potential morse param1 param2 param3
+potential lj epsilon sigma 
+
+nvt Temp freq(nu 1/fs) # ensemble (Canonical === Andersen thermostat)
+
+nve                    # ensemble (MicroCanonical)
 
 ** If you donot want to calculate Andersen thermostate leave the last
 blank.
