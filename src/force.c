@@ -78,6 +78,7 @@ void force(mdsys_t *sys)
                            exit(1);
                         }
                         dist = sqrt(rsq);
+
                         k = (int) dist*sys->ptable.npoints/sys->ptable.rcut;
                         epot += sys->ptable.V[k];
                         ffac = sys->ptable.F[k]/dist;
