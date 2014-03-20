@@ -28,6 +28,7 @@ typedef struct _cell cell_t;
 It also adds the parser and input methods
 """
 
+
 from ctypes import *
 
 class cell_t(Structure):
@@ -44,8 +45,11 @@ class mdsys_t(Structure):
                ("rcut", c_double),
                ("ekin", c_double),
                ("epot", c_double),
-               ("temp", c_double),
+               ("tempin", c_double),
                ("_pad1", c_double),
+               ("tempout",c_double),
+               ("nu",c_double),
+               ("var_andersen",c_double),
                ("pos", POINTER(c_double)),
                ("vel", POINTER(c_double)),
                ("frc", POINTER(c_double)),
@@ -61,10 +65,12 @@ class mdsys_t(Structure):
                ("npair", c_int),
                ("nidx", c_int),
                ("delta", c_double)]
+
    def __init__(self):
       self.nfi=0
       self.clist=None
       self.plist=None
+      self.thermostat=False
 
    def allocate_arrays(self):
       self.pos=(c_double * (self.natoms * 3) )()
@@ -103,31 +109,40 @@ class mdsys_t(Structure):
             key = inp[0]
             val = inp[1]
             if key=="natoms":
-               self.natoms=int(val)
+               self.natoms=int(inp[1])
             elif key=="mass":
-               self.mass=float(val)
+               self.mass=float(inp[1])
             elif key=="epsilon":
-               self.epsilon=float(val)
+               self.epsilon=float(inp[1])
             elif key=="sigma":   
-               self.sigma=float(val)
+               self.sigma=float(inp[1])
             elif key=="rcut":
-               self.rcut=float(val)
+               self.rcut=float(inp[1])
             elif key=="boxlength":
-               self.box=float(val)
+               self.box=float(inp[1])
             elif key=="nsteps":
-               self.nsteps=int(val)
+               self.nsteps=int(inp[1])
             elif key=="timestep":
-               self.dt =float(val)
+               self.dt =float(inp[1])
             elif key=="print":
-               self.nprint=int(val)
+               self.nprint=int(inp[1])
             elif key=="restart":
-               self.inputfile=val.strip()
+               self.inputfile=inp[1].strip()
             elif key=="thermo":
-               self.file_therm = open(val.strip(),'w')
+               self.file_therm = open(inp[1].strip(),'w')
             elif key=="coord":
-               self.file_coord = open(val.strip(),'w')
-            else:
-               raise ValueError('Could not find option %s' % key)
+               self.file_coord = open(inp[1].strip(),'w')
+            elif key=="Andersen":
+               self.tempin=float(inp[1])
+               self.nu=float(inp[2])
+               self.thermostat=True 
+               mvsq2e=2390.05736153349
+               kboltz=0.0019872067
+               self.var_andersen=(kboltz*self.tempin/mvsq2e/self.mass)**0.5
+            elif key=="nsteps":
+                self.nsteps=int(inp[1])
+            #else:
+             #  raise ValueError('Could not find option %s' % key)
 
    def screen_input(self):
       print "Number of atoms"
@@ -157,7 +172,7 @@ class mdsys_t(Structure):
 
    def output(self, step):
       self.file_therm.write("%8d %20.8f %20.8f %20.8f %20.8f\n" %
-                            (step,self.temp,self.ekin,
+                            (step,self.tempout,self.ekin,
                              self.epot,self.ekin+self.epot))
       self.file_coord.write("%d\n nfi=%d etot=%20.8f\n"% 
                             (self.natoms,step,
@@ -166,3 +181,4 @@ class mdsys_t(Structure):
          self.file_coord.write("Ar  %20.8f %20.8f %20.8f\n"%
                                (self.pos[i],self.pos[self.natoms+i],
                                 self.pos[2*self.natoms+i]))
+
