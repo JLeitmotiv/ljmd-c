@@ -1,6 +1,7 @@
 Description:
 -----------------------------------
-This is a program
+This is a simple program for the simulation of Molecular Dynamics.
+The C program is interfaces with python.
 
 A) How to use?
 -----------------------------------
