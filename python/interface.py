@@ -32,6 +32,15 @@ class Application(Frame):
 	]
 	self.ch_pot = ''
 
+	self.integrator = IntVar()
+	self.integrator.set(1)  # initializing the choice, i.e. Python
+
+	self.intg = [
+	    (1, "Verlet"),
+	    (2, "Integrator 2")
+	]
+	self.ch_intg = ''
+
         self.grid()
         self.widget()
 #        self.on_run()
@@ -139,6 +148,14 @@ Please give the input parameter
                 variable=self.v, 
                 value=val).grid(row=val+3, column=3, sticky=W, pady=4)
 
+        self.intg_label = Label(self, text = "Choice Integrator: ")
+        self.intg_label.grid(row=7, column=2, sticky=W, pady=4)
+	for val, txt in self.intg:
+    	    Radiobutton(self, 
+                text=txt,
+                variable=self.integrator, 
+                value=val).grid(row=val+6, column=3, sticky=W, pady=4)
+
 	# Information 
         self.info_label = Label(self, text = "It is project in the workshop at ICTP")
         self.info_label.grid()
@@ -161,8 +178,9 @@ Please give the input parameter
         self.trajfile = self.trajfile_entry.get()
         self.ergfile = self.ergfile_entry.get()
 	self.ch_pot = str(self.v.get())
+	self.ch_intg = str(self.integrator.get())
 
-	self.short_description = 'number of atoms: ' + self.natoms + '\nmass in amu: ' + self.mass + '\nepsilon: ' + self.epsilon + '\nsigma: ' + self.sigma + '\nrcut: ' + self.rcut + '\nbox length: ' + self.box + '\nnumber of steps: ' + self.nsteps + '\ntime interval: ' + self.dt + '\noutput frequency: ' + self.nprint + '\nrestart file: ' + self.restfile + '\ntrajectory file: ' + self.trajfile + '\nOutput file: ' + self.ergfile + '\nPotential: ' + self.ch_pot 
+	self.short_description = 'number of atoms: ' + self.natoms + '\nmass in amu: ' + self.mass + '\nepsilon: ' + self.epsilon + '\nsigma: ' + self.sigma + '\nrcut: ' + self.rcut + '\nbox length: ' + self.box + '\nnumber of steps: ' + self.nsteps + '\ntime interval: ' + self.dt + '\noutput frequency: ' + self.nprint + '\nrestart file: ' + self.restfile + '\ntrajectory file: ' + self.trajfile + '\nOutput file: ' + self.ergfile + '\nPotential: ' + self.ch_pot + '\nIntegrator: ' + self.ch_intg
 
 	# Confirmation message
 	if tkMessageBox.askyesno("Are you sure?", self.short_description):
