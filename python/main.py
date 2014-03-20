@@ -20,21 +20,20 @@ from ctypes import *
 from result import Result
 from md_classes import mdsys_t
 from create_potential import *
-
 import argparse
-parser = argparse.ArgumentParser()
-parser.add_argument("-g", "--gui", help="gui interface",
-                    action="store_true")
-parser.add_argument("-f", "--file", help="input file",
-                    type = str)
-args = parser.parse_args()
-
-
 import time
 md=CDLL("../libljmd-serial.so")
 #md=CDLL("../libljmd-parallel.so")
 
 if __name__ == "__main__":
+   parser = argparse.ArgumentParser()
+   parser.add_argument("-g", "--gui", help="gui interface",
+                       action="store_true")
+   parser.add_argument("-f", "--file", help="input file",
+                       type = str)
+   args = parser.parse_args()
+
+
    LJPot = LennardJones(8.5, 10000, 3.405, 0.2379)
    cellfreq=4;
    mdsys=mdsys_t()
@@ -49,32 +48,27 @@ if __name__ == "__main__":
    mdsys.file_coord = open("argon_108.xyz",'w')
    mdsys.file_therm = open("argon_108.dat",'w')
    mdsys.ptable.npoints = 10000
-   mdsys.ptable.rcut = 8.5
+	   mdsys.ptable.rcut = 8.5
    mdsys.ptable.r = LJPot.r.ctypes.data_as(POINTER(c_double))
    mdsys.ptable.V = LJPot.V.ctypes.data_as(POINTER(c_double))
    mdsys.ptable.F = LJPot.F.ctypes.data_as(POINTER(c_double))
 
-   for i in range(10000):
-      print mdsys.ptable.r[i]
-      print mdsys.ptable.V[i]
-#
-#   LJPot = LennardJones(8.5, 10000, 1.0, 1.0)
-#   cellfreq=4;
-#   mdsys=mdsys_t()
-#   md.start_threads(byref(mdsys))
-# 
-#   if len(sys.argv)==1:
-#      mdsys.screen_input()
-#   elif args.gui:
-#      mdsys.gui_input()
-#   else:
-#      mdsys.file_input(args.file)
-#
-#   mdsys.ptable.npoints = 10000
-#   mdsys.ptable.rcut = 8.5
-#   mdsys.ptable.r = LJPot.r.ctypes.data_as(POINTER(c_double))
-#   mdsys.ptable.V = LJPot.V.ctypes.data_as(POINTER(c_double))
-#   mdsys.ptable.F = LJPot.F.ctypes.data_as(POINTER(c_double))
+   cellfreq=4;
+   mdsys=mdsys_t()
+   md.start_threads(byref(mdsys))
+ 
+   if len(sys.argv)==1:
+      mdsys.screen_input()
+   elif args.gui:
+      mdsys.gui_input()
+   else:
+      mdsys.file_input(args.file)
+
+   mdsys.ptable.npoints = 10000
+   mdsys.ptable.rcut = 8.5
+   mdsys.ptable.r = LJPot.r.ctypes.data_as(POINTER(c_double))
+   mdsys.ptable.V = LJPot.V.ctypes.data_as(POINTER(c_double))
+   mdsys.ptable.F = LJPot.F.ctypes.data_as(POINTER(c_double))
 #
    mdsys.allocate_arrays()
    mdsys.read_restart()
