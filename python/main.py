@@ -11,6 +11,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-g", "--gui", help="gui interface",
                     action="store_true")
+parser.add_argument("-f", "--file", help="input file",
+                    type = str)
 args = parser.parse_args()
 
 
@@ -43,7 +45,7 @@ if __name__ == "__main__":
       mdsys.file_coord = open(app.trajfile,'w')
       mdsys.file_therm = open(app.ergfile,'w')
    else:
-      mdsys.file_input(sys.argv[1])
+      mdsys.file_input(args.file)
 
    # choice the type of computing
    mdsys.nthreads=8 #Because we are running in parallel mode
