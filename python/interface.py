@@ -22,6 +22,15 @@ class Application(Frame):
 
 	self.short_description = ''
 
+	self.v = IntVar()
+	self.v.set(1)  # initializing the choice, i.e. Python
+
+	self.potential = [
+	    (1, "Lennard Jones"),
+	    (2, "Morse"),
+	    (3, "Home Made")
+	]
+	self.ch_pot = ''
 
         self.grid()
         self.widget()
@@ -121,6 +130,15 @@ Please give the input parameter
 	self.ergfile_entry.insert(END, self.ergfile)
         self.ergfile_entry.grid(row=3, column=3, sticky=W, pady=4)
 
+	# Output energies file
+        self.potential_label = Label(self, text = "Choice Potential: ")
+        self.potential_label.grid(row=4, column=2, sticky=W, pady=4)
+	for val, txt in self.potential:
+    	    Radiobutton(self, 
+                text=txt,
+                variable=self.v, 
+                value=val).grid(row=val+3, column=3, sticky=W, pady=4)
+
 	# Information 
         self.info_label = Label(self, text = "It is project in the workshop at ICTP")
         self.info_label.grid()
@@ -128,8 +146,6 @@ Please give the input parameter
 	# run button 
         self.button_run = Button(self, text = "run", command=self.on_run)
         self.button_run.grid(row=10, column=3, sticky=W, pady=4)
-
-
 
     def on_run(self):
 	self.natoms = self.natoms_entry.get()
@@ -144,8 +160,9 @@ Please give the input parameter
         self.restfile = self.restfile_entry.get()
         self.trajfile = self.trajfile_entry.get()
         self.ergfile = self.ergfile_entry.get()
+	self.ch_pot = str(self.v.get())
 
-	self.short_description = 'number of atoms: ' + self.natoms + '\nmass in amu: ' + self.mass + '\nepsilon: ' + self.epsilon + '\nsigma: ' + self.sigma + '\nrcut: ' + self.rcut + '\nbox length: ' + self.box + '\nnumber of steps: ' + self.nsteps + '\ntime interval: ' + self.dt + '\noutput frequency: ' + self.nprint + '\nrestart file: ' + self.restfile + '\ntrajectory file: ' + self.trajfile + '\nOutput file: ' + self.ergfile
+	self.short_description = 'number of atoms: ' + self.natoms + '\nmass in amu: ' + self.mass + '\nepsilon: ' + self.epsilon + '\nsigma: ' + self.sigma + '\nrcut: ' + self.rcut + '\nbox length: ' + self.box + '\nnumber of steps: ' + self.nsteps + '\ntime interval: ' + self.dt + '\noutput frequency: ' + self.nprint + '\nrestart file: ' + self.restfile + '\ntrajectory file: ' + self.trajfile + '\nOutput file: ' + self.ergfile + '\nPotential: ' + self.ch_pot 
 
 	# Confirmation message
 	if tkMessageBox.askyesno("Are you sure?", self.short_description):
