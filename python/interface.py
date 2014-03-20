@@ -165,8 +165,6 @@ Please give the input parameter
 	self.nprint_entry.insert(END, self.nprint)
         self.nprint_entry.grid(row=9, column=1, sticky=W, pady=4)
 
-
-
 	# restart file
         self.restfile_label = Label(self, text = "Restfile (in *.rest): ")
         self.restfile_label.grid(row=1, column=2, sticky=W, pady=4)
@@ -241,14 +239,15 @@ Please give the input parameter
 	self.ch_intg = str(self.integrator.get())
 	self.ch_state = str(self.thermostate.get())
 
-        a = self.potential[0]
-        print a[1]
+        a = self.potential[int(self.ch_pot)-1]
+	b = self.intg[int(self.ch_intg)-1]
+	c = self.th_state[int(self.ch_state)-1]
 
     	if (self.thermostate.get()==1):
 	    self.Andersen(self)
 	    self.check_andersen = '\nAndersen: ' + str(self.var_andersen)
 
-	self.short_description = 'number of atoms: ' + self.natoms + '\nmass in amu: ' + self.mass + '\nepsilon: ' + self.epsilon + '\nsigma: ' + self.sigma + '\nrcut: ' + self.rcut + '\nbox length: ' + self.box + '\nnumber of steps: ' + self.nsteps + '\ntime interval: ' + self.dt + '\noutput frequency: ' + self.nprint + '\nrestart file: ' + self.restfile + '\ntrajectory file: ' + self.trajfile + '\nOutput file: ' + self.ergfile + '\nPotential: ' + self.ch_pot + '\nIntegrator: ' + self.ch_intg + '\nThermostate: ' + self.ch_state + self.check_andersen
+	self.short_description = 'number of atoms: ' + self.natoms + '\nmass in amu: ' + self.mass + '\nepsilon: ' + self.epsilon + '\nsigma: ' + self.sigma + '\nrcut: ' + self.rcut + '\nbox length: ' + self.box + '\nnumber of steps: ' + self.nsteps + '\ntime interval: ' + self.dt + '\noutput frequency: ' + self.nprint + '\nrestart file: ' + self.restfile + '\ntrajectory file: ' + self.trajfile + '\nOutput file: ' + self.ergfile + '\nPotential: ' + a[1] + '\nIntegrator: ' + b[1] + '\nThermostate: ' + c[1] + self.check_andersen
 
 	# Confirmation message
 	if tkMessageBox.askyesno("Are you sure?", self.short_description):

@@ -169,8 +169,6 @@ class mdsys_t(Structure):
       self.tempin = app.tempin
       self.nu = app.nu
 
-
-
    def screen_input(self):
       print "Number of atoms"
       self.natoms=int(raw_input())
