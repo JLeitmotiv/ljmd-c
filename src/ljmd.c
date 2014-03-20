@@ -116,6 +116,14 @@ int main(int argc, char **argv)
     sys.ptable.F[i] = 4 * epsilon * ( 12 * pow(sigma/sys.ptable.r[i], 12.0) - 6* pow(sigma/sys.ptable.r[i], 6.0)) / sys.ptable.r[i];
   }
 
+  fp=fopen("table.dat", "w");
+  for (i = 0; i < sys.ptable.npoints; i++){
+    sys.ptable.r[i] = (i + 1.0) / sys.ptable.npoints * sys.ptable.rcut;
+    sys.ptable.V[i] = 4 * epsilon * ( pow(sigma/sys.ptable.r[i], 12.0) - pow(sigma/sys.ptable.r[i], 6.0));
+    sys.ptable.F[i] = 4 * epsilon * ( 12 * pow(sigma/sys.ptable.r[i], 12.0) - 6* pow(sigma/sys.ptable.r[i], 6.0)) / sys.ptable.r[i];
+    fprintf(fp, "%20g %20g %20g\n", sys.ptable.r[i], sys.ptable.F[i], sys.ptable.V[i]);
+  }
+  close(fp);
   /* read restart */
   fp=fopen(restfile,"r");
   if(fp) {

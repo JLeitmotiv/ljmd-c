@@ -11,15 +11,22 @@ void force(mdsys_t *sys)
 #pragma omp parallel reduction(+:epot)
 #endif
     {
-        double boxby2,rcsq;
-        double rcoresq;
+        double boxby2, rcsq, rcut, dr, drsq, invdr;
+        double rcore, rcoresq;
         double *fx, *fy, *fz;
         const double *rx, *ry, *rz;
         int i, tid, fromidx, toidx, natoms;
 
         /* precompute some constants */
-        rcsq= sys->ptable.rcut * sys->ptable.rcut;
-        rcoresq = sys->ptable.r[0] * sys->ptable.r[0];
+
+
+        rcut = sys->ptable.rcut;
+        rcsq = rcut * rcut;
+        rcore = sys->ptable.r[0];
+        rcoresq = rcore * rcore;
+        drsq = ( rcsq - rcoresq ) / ( sys->ptable.npoints - 1 );
+        dr = ( rcut - rcore ) / (sys->ptable.npoints -1);
+        invdr = 1.0 / dr;
         boxby2 = 0.5*sys->box;
         natoms = sys->natoms;
         epot = 0.0;
@@ -72,16 +79,25 @@ void force(mdsys_t *sys)
                     /* compute force and energy if within cutoff */
                     if (rsq < rcsq) {
                         int k;
-                        double dist, ffac;
+                        double dist, ffac, rk, phi, dphi, w;
                         if (rsq < rcoresq) {
                            printf("Pair distance less than table defined"); 
                            exit(1);
                         }
+                        if (rsq < 4.0) {
+                           printf("Pair distance too small, check"); 
+                           sleep(1);
+                        }
                         dist = sqrt(rsq);
 
-                        k = (int) dist*sys->ptable.npoints/sys->ptable.rcut;
-                        epot += sys->ptable.V[k];
-                        ffac = sys->ptable.F[k]/dist;
+
+                        rk = ( dist - rcore ) * invdr;
+                        k = (int) rk;
+                        w = rk - k;
+                        phi  = w * sys->ptable.V[k+1] + ( 1.0 - w ) * sys->ptable.V[k];
+                        dphi = w * sys->ptable.F[k+1] + ( 1.0 - w) * sys->ptable.F[k];
+                        epot += phi;
+                        ffac = dphi / dist;
 
                         fx[ii] += rx2*ffac;
                         fy[ii] += ry2*ffac;
@@ -128,16 +144,24 @@ void force(mdsys_t *sys)
                     /* compute force and energy if within cutoff */
                     if (rsq < rcsq) {
                         int k;
-                        double dist, ffac;
+                        double dist, ffac, rk, phi, dphi, w;
                         if (rsq < rcoresq) {
                            printf("Pair distance less than table defined"); 
                            exit(1);
                         }
+                        if (rsq < 4.0) {
+                           printf("Pair distance too small, check"); 
+                           sleep(1);
+                        }
+
                         dist = sqrt(rsq);
-                        k = (int) (dist * sys->ptable.npoints / sys->ptable.rcut);
-                    
-                        epot += sys->ptable.V[k];
-                        ffac = sys->ptable.F[k]/dist;
+                        rk = ( dist - rcore ) * invdr;
+                        k = (int) rk;
+                        w = rk - k;
+                        phi  = w * sys->ptable.V[k+1] + ( 1.0 - w ) * sys->ptable.V[k];
+                        dphi = w * sys->ptable.F[k+1] + ( 1.0 - w) * sys->ptable.F[k];
+                        epot += phi;
+                        ffac = dphi / dist;
 
                         fx[ii] += rx2*ffac;
                         fy[ii] += ry2*ffac;
