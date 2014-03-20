@@ -1,3 +1,6 @@
+#Class used for ploting the final result out of the simulation
+#the magnitudes ploted are Step Temp Epot Ekin Etot
+
 class Result(object):
 
     def __init__(self, time, temp, Ekin, Epot, Etot):

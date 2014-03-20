@@ -1,3 +1,17 @@
+#This is a python Interface that couples whit a Molecular Dynamics program write in C.
+#The features supported are:
+#       Lennard-Jones potential 
+#       Verlet integrator for constant energy or constant temperature simulation
+#       Easy input from a GUI or text file
+#       Automatic plotting of Energy and Temperature graphs
+#       Output of Coordinates in xyz format
+#       Output of thermodynamic data  
+#	→ Step Temp Ekin Epot Etot	 
+
+#Authoring of the C code corresponds to Axel Kohlmeyer
+#Authoring of Python interface corresponds to Alcain Pablo, Hoque Md. Enamul, Factorovich Matias.
+
+
 #!/usr/bin/python
 import sys
 import numpy as np

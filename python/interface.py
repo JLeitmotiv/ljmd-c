@@ -1,4 +1,6 @@
-# simple gui interface
+#This is a simple Graphical User Interface that imports the info from an input text file,
+#everything can be change except for the number of atoms and the restart file because 
+#of incompatibilities 
 
 from Tkinter import *
 import tkMessageBox
