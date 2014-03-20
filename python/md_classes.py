@@ -174,6 +174,12 @@ class mdsys_t(Structure):
       self.file_therm.write("%8d %20.8f %20.8f %20.8f %20.8f\n" %
                             (step,self.tempout,self.ekin,
                              self.epot,self.ekin+self.epot))
+
+      self.temp_out.append(self.tempout)
+      self.ekin_out.append(self.ekin)
+      self.epot_out.append(self.epot)
+      self.etot_out.append(self.ekin+self.epot)
+
       self.file_coord.write("%d\n nfi=%d etot=%20.8f\n"% 
                             (self.natoms,step,
                              self.ekin+self.epot))

@@ -1,10 +1,11 @@
 [-]: improve input behaviour
    (X): sanitize input from python and clean classes
-   ( ): make the proper GUI input (with a flag to mark we want to run GUI, like "./main.py -g")
-[ ]: "portability": figure out a way to ask for the number of threads in main.py
+   (X): make the proper GUI input (with a flag to mark we want to run GUI, like "./main.py -g")
+[X]: "portability": figure out a way to ask for the number of threads in main.py
 [ ]: Makefiles and c-code
    ( ): remove the warnings and check that Makefiles work properly
-   ( ): refactor mdsys class in both c and python to remove unneeded info (like nfi, ncellfreq, and such)
+   (o): refactor mdsys class in both c and python to remove unneeded info (like nfi, ncellfreq, and such)
+        *** DECIDED TO LEAVE IT SO IT CAN BE COMPATIBLE WITH PREVIOUS IMPLEMENTATION, NOT MUCH OVERHEAD ***
 [X]: clean and sanitize main.py inputs
 ----------------------------------------------------
 
