@@ -58,11 +58,7 @@ class pot_t(Structure):
 
 class mdsys_t(Structure):
    _fields_ = [("clist", POINTER(cell_t)),
-               ("npoints", c_int),
-               ("r", POINTER(c_double)),
-               ("V", POINTER(c_double)),
-               ("F", POINTER(c_double)),
-               ("rcut", c_double),
+               ("ptable", pot_t),
                ("dt", c_double),
                ("mass", c_double),
                ("box", c_double),

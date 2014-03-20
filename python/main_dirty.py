@@ -27,18 +27,19 @@ if __name__ == "__main__":
    mdsys.inputfile = "argon_108.rest"
    mdsys.file_coord = open("argon_108.xyz",'w')
    mdsys.file_therm = open("argon_108.dat",'w')
-   mdsys.npoints = 10000
-   mdsys.rcut = 8.5
-   mdsys.r = LJPot.r.ctypes.data_as(POINTER(c_double))
-   mdsys.V = LJPot.V.ctypes.data_as(POINTER(c_double))
-   mdsys.F = LJPot.F.ctypes.data_as(POINTER(c_double))
+   mdsys.ptable.npoints = 10000
+   mdsys.ptable.rcut = 8.5
+   mdsys.ptable.r = LJPot.r.ctypes.data_as(POINTER(c_double))
+   mdsys.ptable.V = LJPot.V.ctypes.data_as(POINTER(c_double))
+   mdsys.ptable.F = LJPot.F.ctypes.data_as(POINTER(c_double))
 
    mdsys.allocate_arrays()
    mdsys.read_restart()
+   print mdsys.natoms
    md.updcells(byref(mdsys));
    md.ekin(byref(mdsys));
    md.force(byref(mdsys));
-   return
+   
    time = []
    mdsys.temp_out = []
    mdsys.ekin_out = []
