@@ -51,9 +51,12 @@ class HomeMade(Potential):
 
 if __name__ == "__main__":
     import pylab as pl
-    LJPot = LennardJones(2.5, 1000, 1.0, 1.0)
+    LJPot = LennardJones(8.5, 10000, 3.405, 0.2379)
     pl.plot(LJPot.r, LJPot.V)
     pl.ylim(-2, 2)
+    pl.show()
+    pl.plot(LJPot.r[:-1], LJPot.F[:-1]-np.diff(LJPot.V)/np.diff(LJPot.r))
+    #pl.ylim(-2, 2)
     pl.show()
     MPot = Morse(5.5, 1000, 1.0, 1.0, 1.0)
     pl.plot(MPot.r, MPot.V)

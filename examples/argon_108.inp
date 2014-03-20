@@ -3,6 +3,7 @@
 0.2379            # epsilon in kcal/mol
 3.405             # sigma in angstrom
 8.5               # rcut in angstrom
+10000             # npoints for the interpolation
 17.1580           # box length (in angstrom)
 argon_108.rest    # restart
 argon_108.xyz     # trajectory

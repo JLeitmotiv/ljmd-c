@@ -45,7 +45,7 @@ static void output(mdsys_t *sys, FILE *erg, FILE *traj)
   int i,natoms;
   natoms=sys->natoms;
     
-  //printf("% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
+  printf("% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
   fprintf(erg,"% 8d % 20.8f % 20.8f % 20.8f % 20.8f\n", sys->nfi, sys->temp, sys->ekin, sys->epot, sys->ekin+sys->epot);
   fprintf(traj,"%d\n nfi=%d etot=%20.8f\n", sys->natoms, sys->nfi, sys->ekin+sys->epot);
   for (i=0; i<natoms; ++i) {
@@ -59,6 +59,7 @@ int main(int argc, char **argv)
 {
   int nprint, i;
   char restfile[BLEN], trajfile[BLEN], ergfile[BLEN], line[BLEN];
+  double sigma, epsilon;
   FILE *fp,*traj,*erg;
   mdsys_t sys;
 
@@ -80,11 +81,13 @@ int main(int argc, char **argv)
   if(get_a_line(stdin,line)) return 1;
   sys.mass=atof(line);
   if(get_a_line(stdin,line)) return 1;
-  atof(line);
+  epsilon = atof(line);
   if(get_a_line(stdin,line)) return 1;
-  atof(line);
+  sigma = atof(line);
   if(get_a_line(stdin,line)) return 1;
-  atof(line);
+  sys.rcut = atof(line);
+  if(get_a_line(stdin,line)) return 1;
+  sys.npoints = atoi(line);
   if(get_a_line(stdin,line)) return 1;
   sys.box=atof(line);
   if(get_a_line(stdin,restfile)) return 1;
@@ -102,6 +105,16 @@ int main(int argc, char **argv)
   sys.vel=(double *)malloc(3*sys.natoms*sizeof(double));
   sys.frc=(double *)malloc(sys.nthreads*3*sys.natoms*sizeof(double));
 
+  /* create table */
+  sys.r  =(double *)malloc(sys.npoints*sizeof(double));
+  sys.V  =(double *)malloc(sys.npoints*sizeof(double));
+  sys.F  =(double *)malloc(sys.npoints*sizeof(double));
+  
+  for (i = 0; i < sys.npoints; i++){
+    sys.r[i] = (i + 1.0) / sys.npoints * sys.rcut;
+    sys.V[i] = 4 * epsilon * ( pow(sigma/sys.r[i], 12.0) - pow(sigma/sys.r[i], 6.0));
+    sys.F[i] = 4 * epsilon * ( 12 * pow(sigma/sys.r[i], 12.0) - 6* pow(sigma/sys.r[i], 6.0)) / sys.r[i];
+  }
   /* read restart */
   fp=fopen(restfile,"r");
   if(fp) {
@@ -141,7 +154,7 @@ int main(int argc, char **argv)
   for(sys.nfi=1; sys.nfi <= sys.nsteps; ++sys.nfi) {
 
     /* write output, if requested */
-    if ((sys.nfi % nprint) == 0) 
+  //  if ((sys.nfi % nprint) == 0) 
       output(&sys, erg, traj);
 
     /* propagate system and recompute energies */

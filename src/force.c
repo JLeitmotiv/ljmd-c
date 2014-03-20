@@ -88,7 +88,7 @@ void force(mdsys_t *sys)
                         fx[jj] -= rx2*ffac;
                         fy[jj] -= ry2*ffac;
                         fz[jj] -= rz2*ffac;
-                    }
+                   }  
                 }
             }
         }    
@@ -117,7 +117,7 @@ void force(mdsys_t *sys)
                     double rx2,ry2,rz2,rsq;
                 
                     jj=c2->idxlist[k];
-                
+
                     /* get distance between particle i and j */
                     rx2=pbc(rx1 - rx[jj], boxby2, sys->box);
                     ry2=pbc(ry1 - ry[jj], boxby2, sys->box);
@@ -133,7 +133,8 @@ void force(mdsys_t *sys)
                            exit(1);
                         }
                         dist = sqrt(rsq);
-                        k = (int) dist*sys->npoints/sys->rcut;
+                        k = (int) (dist * sys->npoints / sys->rcut);
+                    
                         epot += sys->V[k];
                         ffac = sys->F[k]/dist;
 

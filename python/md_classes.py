@@ -45,9 +45,13 @@ class pot_t(Structure):
 
    def create_table(self, Potential):
 	self.npoints = len(r)
-	self.r = Potential.r.ctypes.data_as(POINTER(c_float))
-	self.V = Potential.V.ctypes.data_as(POINTER(c_double))
-	self.F = Potential.F.ctypes.data_as(POINTER(c_double))
+        self.r=(c_double * (self.npoints) )()
+        self.V=(c_double * (self.npoints) )()
+        self.F=(c_double * (self.npoints) )()
+        for i in range(self.npoints):   
+            self.r[i] = Potential.r[i]
+            self.F[i] = Potential.F[i]
+            self.V[i] = Potential.V[i]
         self.rcut = Potential.r[:-1]
 
    
@@ -59,6 +63,7 @@ class mdsys_t(Structure):
                ("V", POINTER(c_double)),
                ("F", POINTER(c_double)),
                ("rcut", c_double),
+               ("dt", c_double),
                ("mass", c_double),
                ("box", c_double),
                ("ekin", c_double),
@@ -68,7 +73,6 @@ class mdsys_t(Structure):
                ("pos", POINTER(c_double)),
                ("vel", POINTER(c_double)),
                ("frc", POINTER(c_double)),
-               ("dt", c_double),
                ("plist", POINTER(c_int)),
                ("_pad2", c_int),
                ("natoms", c_int),
@@ -88,7 +92,6 @@ class mdsys_t(Structure):
 #      self.table.create_table(Potential)
 
    def allocate_arrays(self):
-      print self.natoms
       self.pos=(c_double * (self.natoms * 3) )()
       self.vel=(c_double * (self.natoms * 3) )()
       self.frc=(c_double * (self.nthreads * self.natoms * 3) )()
