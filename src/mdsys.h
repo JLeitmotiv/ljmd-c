@@ -7,8 +7,6 @@
 /* structure to hold the complete information 
  * about the MD system */
 struct _mdsys {
-  double dt, mass, epsilon, sigma, box, rcut;
-  double ekin, epot, tempin, _pad1,tempout,nu,var_andersen;
   cell_t *clist;
   pot_t ptable;
   double dt, mass, box;
