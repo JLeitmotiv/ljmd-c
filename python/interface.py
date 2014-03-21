@@ -6,7 +6,10 @@ from Tkinter import *
 import tkMessageBox
 
 class Application(Frame):
-
+    """
+    This is the GUI frontend. It sets some default values and 
+    can be used to choose between Morse and Lennard Jones potential
+    """
     def __init__(self, master):
         Frame.__init__(self, master)
 	self.natoms = 108
@@ -99,7 +102,7 @@ class Application(Frame):
     def widget(self):
         self.description_text = '''
 Please give the input parameter
- to run in LJMD
+ to run in CoffeeMD
 		'''
         self.description_label = Label(self, text = self.description_text)
         self.description_label.grid(row=0, column=0, sticky=W, pady=8)
@@ -189,7 +192,7 @@ Please give the input parameter
         self.ergfile_entry.grid(row=3, column=3, sticky=W, pady=4)
 
 	# radio potential
-        self.potential_label = Label(self, text = "Choice Potential: ")
+        self.potential_label = Label(self, text = "Potential: ")
         self.potential_label.grid(row=4, column=2, sticky=W, pady=4)
 	for val, txt in self.potential:
     	    Radiobutton(self, 
@@ -198,7 +201,7 @@ Please give the input parameter
                 value=val).grid(row=val+3, column=3, sticky=W, pady=4)
 
 	# radio integrator
-        self.intg_label = Label(self, text = "Choice Integrator: ")
+        self.intg_label = Label(self, text = "Integrator: ")
         self.intg_label.grid(row=7, column=2, sticky=W, pady=4)
 	for val, txt in self.intg:
     	    Radiobutton(self, 
@@ -207,7 +210,7 @@ Please give the input parameter
                 value=val).grid(row=val+6, column=3, sticky=W, pady=4)
 
 	# radio thermostate
-        self.intg_label = Label(self, text = "Choice Thermostate: ")
+        self.intg_label = Label(self, text = "Thermostat: ")
         self.intg_label.grid(row=9, column=2, sticky=W, pady=4)
 	for val, txt in self.th_state:
     	    Radiobutton(self, 
@@ -217,7 +220,7 @@ Please give the input parameter
                 value=val).grid(row=val+8, column=3, sticky=W, pady=4)
 
 	# Information 
-        self.info_label = Label(self, text = "It is project in the workshop at ICTP")
+        self.info_label = Label(self, text = "CoffeeMD Graphical User Interface")
         self.info_label.grid()
 
 	# run button 
