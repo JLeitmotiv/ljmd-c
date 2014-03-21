@@ -8,7 +8,7 @@
 #       Automatic plotting of Energy and Temperature graphs
 #       Output of Coordinates in xyz format
 #       Output of thermodynamic data  
-#	→ Step Temp Ekin Epot Etot	 
+#       Step Temp Ekin Epot Etot	 
 
 #Authoring of the C code corresponds to Axel Kohlmeyer
 #Authoring of Python interface corresponds to Alcain Pablo, Hoque Md. Enamul, Factorovich Matias.
@@ -22,8 +22,6 @@ from md_classes import mdsys_t
 from create_potential import *
 import argparse
 import time
-md=CDLL("../libljmd-serial.so")
-#md=CDLL("../libljmd-parallel.so")
 
 if __name__ == "__main__":
    parser = argparse.ArgumentParser()
@@ -31,18 +29,25 @@ if __name__ == "__main__":
                        action="store_true")
    parser.add_argument("-f", "--file", help="input file",
                        type = str)
+   parser.add_argument("-p", "--parallel", help="parallel on",
+                       action="store_true")
    args = parser.parse_args()
+   if args.parallel: 
+      md=CDLL("../libljmd-parallel.so")
+   else:   
+      md=CDLL("../libljmd-serial.so")
+
 
    cellfreq=4;
    mdsys=mdsys_t()
    md.start_threads(byref(mdsys))
  
-   if len(sys.argv)==1:
-      mdsys.screen_input()
-   elif args.gui:
+   if args.gui:
       mdsys.gui_input()
-   else:
+   elif args.file != None:
       mdsys.file_input(args.file)
+   else:
+      mdsys.screen_input()
 
    if mdsys.type_potential ==1:
       Pot = LennardJones(mdsys.rcut, mdsys.npoints, mdsys.sigma, mdsys.epsilon)
