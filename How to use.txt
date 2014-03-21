@@ -42,9 +42,8 @@ B) Format of input file with the extension *.inp :
 -------------------------------------
 natoms 108             # natoms
 mass 39.948            # mass in AMU
-epsilon 0.2379         # epsilon in kcal/mol
-sigma 3.405            # sigma in angstrom
 rcut 8.5               # rcut in angstrom
+npoints 10000          # number of points for interpolation
 boxlength 17.1580      # box length (in angstrom)
 restart argon_108.rest # restart
 coord argon_108.xyz    # coord_output file
@@ -53,8 +52,8 @@ nsteps 10000           # nr MD steps
 timestep 5.0           # MD time step (in fs)
 print 100              # output print frequency
 
-potential morse param1 param2 param3
-potential lj epsilon sigma 
+potential morse param1 param2 param3 # defining morse potential
+potential lj epsilon sigma           # defining lj potential
 
 nvt Temp freq(nu 1/fs) # ensemble (Canonical === Andersen thermostat)
 
