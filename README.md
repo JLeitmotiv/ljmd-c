@@ -53,6 +53,8 @@ typical [velocity verlet algorithm](http://en.wikipedia.org/wiki/Verlet_integrat
 ensemble. To reproduce the canonical ensamble, an Andersen
 thermostat [Frenkel] is available as well.
 
+[Frenkel] Understanding Molecular Simulation: From Algorithms to Applications
+
 
 Output (in Python)
 ------------------
@@ -85,5 +87,3 @@ different input modes:
 - for help, type:
 
     $ ./main.py -h [--help]
-
-[Frenkel] Understanding Molecular Simulation: From Algorithms to Applications
