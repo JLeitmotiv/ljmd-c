@@ -4,17 +4,16 @@ CoffeeMD
 Molecular Dynamics code in python with c bindings.
 
 This program is based on the original c code from Axel Kohlmeyer, 
- `ljmd-c 
-<https://github.com/akohlmey/ljmd-c>`_ and refactored to
+[ljmd-c](https://github.com/akohlmey/ljmd-c) and refactored to
 add python bindings. It is distributed under the terms of the GNU
 General Public License.
 
 Introduction
 ------------
 
-This software was made during the ICTP `Workshop on Advanced Techniques 
+This software was made during the ICTP [Workshop on Advanced Techniques 
 for Scientific Programming and Management of Open Source Software 
-Packages <http://cdsagenda5.ictp.it/full_display.php?ida=a13190>`_, and
+Packages](http://cdsagenda5.ictp.it/full_display.php?ida=a13190), and
 its main idea is to be able to *build* molecular dynamics simulation with
 the flexibility that Python gives, leaving the hard math to c. Here, 
 building means that the c library has the minimum it should have in order
@@ -50,10 +49,9 @@ Algorithm Capabilities (in c)
 -----------------------------
 
 The c code takes a LUT of the potential and integrates it with a
-typical `velocity verlet algorithm 
-<http://en.wikipedia.org/wiki/Verlet_integration>`_ in the microcanonical
+typical [velocity verlet algorithm](http://en.wikipedia.org/wiki/Verlet_integration) in the microcanonical
 ensemble. To reproduce the canonical ensamble, an Andersen
-thermostat [Frenkel]_ is available as well.
+thermostat [Frenkel] is available as well.
 
 
 Output (in Python)
@@ -74,32 +72,18 @@ different input modes:
 
 - screen mode:
 
-	$ ./main.py
+    $ ./main.py
 
 - file mode:
 
-	$ ./main.py -f [--file] <filename.inp>
+    $ ./main.py -f [--file] <filename.inp>
 
 - GUI mode:
 
-	$ ./main.py -g [--gui]
+    $ ./main.py -g [--gui]
 
 - for help, type:
 
-	$ ./main.py -h
-	$ ./main.py --help
+    $ ./main.py -h [--help]
 
 [Frenkel] Understanding Molecular Simulation: From Algorithms to Applications
-This package contains simplified MD code with multi-threading
-parallelization for simulating atoms with a Lennard-Jones potential.
-
-The bundled makefiles are set up to compile the executable once
-with OpenMP disabled and once with OpenMP enabled with each build
-placing the various object files in separate directories.
-
-The examples directory contains 3 sets of example input decks
-and the reference directory the corresponding outputs.
-
-Type: make
-to compile everything and: make clean
-to remove all compiled objects
