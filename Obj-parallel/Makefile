@@ -18,7 +18,7 @@ clean:
 coffeemd-parallel.x: $(OBJ) md.o
 	$(CC) -o ../$@ $(CFLAGS) $^ $(LDLIBS)
 
-../libicoffeemd-parallel.so: $(OBJ)
+../libcoffeemd-parallel.so: $(OBJ)
 	$(CC) -o $@ $(CFLAGS) $^ -shared $(LDLIBS)
 
 # compilation pattern rule for objects
