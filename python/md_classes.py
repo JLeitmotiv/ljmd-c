@@ -13,11 +13,17 @@ from Tkinter import *
 from create_potential import *
 
 class cell_t(Structure):
+   """
+   Basic structure for a cell in the library
+   """
    _fields_ = [("natoms", c_int),
                ("owner", c_int),
                ("idxlist", POINTER(c_int))]
    
 class pot_t(Structure):
+   """
+   Basic structure for a LUT in the library
+   """
    _fields_ = [("npoints", c_int),
                ("r", POINTER(c_double)),
                ("V", POINTER(c_double)),
@@ -25,6 +31,9 @@ class pot_t(Structure):
                ("rcut", c_double)]
 
    def create_table(self, Potential):
+        """
+        This method copies Potential table to self
+        """ 
 	self.npoints = len(r)
         self.r=(c_double * (self.npoints) )()
         self.V=(c_double * (self.npoints) )()
@@ -38,6 +47,9 @@ class pot_t(Structure):
    
 
 class mdsys_t(Structure):
+   """
+   Basic structure for the Molecular Dynamics system in the library
+   """
    _fields_ = [("clist", POINTER(cell_t)),
                ("ptable", pot_t),
                ("dt", c_double),
@@ -72,11 +84,17 @@ class mdsys_t(Structure):
       self.thermostat=False
 
    def allocate_arrays(self):
+      """
+      This method allocates position, velocity and force arrays
+      """
       self.pos=(c_double * (self.natoms * 3) )()
       self.vel=(c_double * (self.natoms * 3) )()
       self.frc=(c_double * (self.nthreads * self.natoms * 3) )()
       
    def read_restart(self):
+      """
+      Populate positions and velocities from restart file
+      """
       with open(self.inputfile, 'rb') as fp:
          for i in range(self.natoms):   
             line=fp.readline()
@@ -143,7 +161,7 @@ class mdsys_t(Structure):
 
    def gui_input(self):
       root = Tk()
-      root.title("A simple gui interface for LJMD")
+      root.title("A simple GUI interface for CoffeeMD")
       root.geometry("750x470")
       app = Application(root)
       app.grid()
@@ -193,6 +211,9 @@ class mdsys_t(Structure):
       self.file_coord  = open(raw_input(), 'w')
 
    def output(self, step):
+      """
+      Simple method to output to file
+      """
       self.file_therm.write("%8d %20.8f %20.8f %20.8f %20.8f\n" %
                             (step,self.tempout,self.ekin,
                              self.epot,self.ekin+self.epot))

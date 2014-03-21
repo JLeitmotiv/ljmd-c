@@ -2,7 +2,9 @@
 #the magnitudes ploted are Step Temp Epot Ekin Etot
 
 class Result(object):
-
+    """
+    This class shows the graphs
+    """
     def __init__(self, time, temp, Ekin, Epot, Etot):
         self.time = time
         self.temp = temp
@@ -11,6 +13,9 @@ class Result(object):
         self.Etot = Etot
 
     def graph(self):
+        """
+        Graphs and shows Energy and Temperature
+        """
         import matplotlib.pyplot as plt
         fig, (ax0, ax1) = plt.subplots(nrows=2)
 
