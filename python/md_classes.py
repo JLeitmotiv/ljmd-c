@@ -10,19 +10,39 @@
 from ctypes import *
 from interface import Application
 from Tkinter import *
+from create_potential import *
 
 class cell_t(Structure):
    _fields_ = [("natoms", c_int),
                ("owner", c_int),
                ("idxlist", POINTER(c_int))]
    
+class pot_t(Structure):
+   _fields_ = [("npoints", c_int),
+               ("r", POINTER(c_double)),
+               ("V", POINTER(c_double)),
+               ("F", POINTER(c_double)),
+               ("rcut", c_double)]
+
+   def create_table(self, Potential):
+	self.npoints = len(r)
+        self.r=(c_double * (self.npoints) )()
+        self.V=(c_double * (self.npoints) )()
+        self.F=(c_double * (self.npoints) )()
+        for i in range(self.npoints):   
+            self.r[i] = Potential.r[i]
+            self.F[i] = Potential.F[i]
+            self.V[i] = Potential.V[i]
+        self.rcut = Potential.r[:-1]
+
+   
+
 class mdsys_t(Structure):
-   _fields_ = [("dt", c_double),
+   _fields_ = [("clist", POINTER(cell_t)),
+               ("ptable", pot_t),
+               ("dt", c_double),
                ("mass", c_double),
-               ("epsilon", c_double),
-               ("sigma", c_double),
                ("box", c_double),
-               ("rcut", c_double),
                ("ekin", c_double),
                ("epot", c_double),
                ("tempin", c_double),
@@ -33,7 +53,6 @@ class mdsys_t(Structure):
                ("pos", POINTER(c_double)),
                ("vel", POINTER(c_double)),
                ("frc", POINTER(c_double)),
-               ("clist", POINTER(cell_t)),
                ("plist", POINTER(c_int)),
                ("_pad2", c_int),
                ("natoms", c_int),

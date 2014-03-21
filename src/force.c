@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "force.h"
 
 /* compute forces */
@@ -9,15 +11,22 @@ void force(mdsys_t *sys)
 #pragma omp parallel reduction(+:epot)
 #endif
     {
-        double c12,c6,boxby2,rcsq;
+        double boxby2, rcsq, rcut, dr, drsq, invdr;
+        double rcore, rcoresq;
         double *fx, *fy, *fz;
         const double *rx, *ry, *rz;
         int i, tid, fromidx, toidx, natoms;
 
         /* precompute some constants */
-        c12 = 4.0*sys->epsilon*pow(sys->sigma,12.0);
-        c6  = 4.0*sys->epsilon*pow(sys->sigma, 6.0);
-        rcsq= sys->rcut * sys->rcut;
+
+
+        rcut = sys->ptable.rcut;
+        rcsq = rcut * rcut;
+        rcore = sys->ptable.r[0];
+        rcoresq = rcore * rcore;
+        drsq = ( rcsq - rcoresq ) / ( sys->ptable.npoints - 1 );
+        dr = ( rcut - rcore ) / (sys->ptable.npoints -1);
+        invdr = 1.0 / dr;
         boxby2 = 0.5*sys->box;
         natoms = sys->natoms;
         epot = 0.0;
@@ -69,13 +78,26 @@ void force(mdsys_t *sys)
 
                     /* compute force and energy if within cutoff */
                     if (rsq < rcsq) {
-                        double r6,rinv,ffac;
+                        int k;
+                        double dist, ffac, rk, phi, dphi, w;
+                        if (rsq < rcoresq) {
+                           printf("Pair distance less than table defined"); 
+                           exit(1);
+                        }
+                        if (rsq < 4.0) {
+                           printf("Pair distance too small, check"); 
+                           sleep(1);
+                        }
+                        dist = sqrt(rsq);
 
-                        rinv=1.0/rsq;
-                        r6=rinv*rinv*rinv;
-                    
-                        ffac = (12.0*c12*r6 - 6.0*c6)*r6*rinv;
-                        epot += r6*(c12*r6 - c6);
+
+                        rk = ( dist - rcore ) * invdr;
+                        k = (int) rk;
+                        w = rk - k;
+                        phi  = w * sys->ptable.V[k+1] + ( 1.0 - w ) * sys->ptable.V[k];
+                        dphi = w * sys->ptable.F[k+1] + ( 1.0 - w) * sys->ptable.F[k];
+                        epot += phi;
+                        ffac = dphi / dist;
 
                         fx[ii] += rx2*ffac;
                         fy[ii] += ry2*ffac;
@@ -83,7 +105,7 @@ void force(mdsys_t *sys)
                         fx[jj] -= rx2*ffac;
                         fy[jj] -= ry2*ffac;
                         fz[jj] -= rz2*ffac;
-                    }
+                   }  
                 }
             }
         }    
@@ -112,7 +134,7 @@ void force(mdsys_t *sys)
                     double rx2,ry2,rz2,rsq;
                 
                     jj=c2->idxlist[k];
-                
+
                     /* get distance between particle i and j */
                     rx2=pbc(rx1 - rx[jj], boxby2, sys->box);
                     ry2=pbc(ry1 - ry[jj], boxby2, sys->box);
@@ -121,13 +143,25 @@ void force(mdsys_t *sys)
                 
                     /* compute force and energy if within cutoff */
                     if (rsq < rcsq) {
-                        double r6,rinv,ffac;
+                        int k;
+                        double dist, ffac, rk, phi, dphi, w;
+                        if (rsq < rcoresq) {
+                           printf("Pair distance less than table defined"); 
+                           exit(1);
+                        }
+                        if (rsq < 4.0) {
+                           printf("Pair distance too small, check"); 
+                           sleep(1);
+                        }
 
-                        rinv=1.0/rsq;
-                        r6=rinv*rinv*rinv;
-                    
-                        ffac = (12.0*c12*r6 - 6.0*c6)*r6*rinv;
-                        epot += r6*(c12*r6 - c6);
+                        dist = sqrt(rsq);
+                        rk = ( dist - rcore ) * invdr;
+                        k = (int) rk;
+                        w = rk - k;
+                        phi  = w * sys->ptable.V[k+1] + ( 1.0 - w ) * sys->ptable.V[k];
+                        dphi = w * sys->ptable.F[k+1] + ( 1.0 - w) * sys->ptable.F[k];
+                        epot += phi;
+                        ffac = dphi / dist;
 
                         fx[ii] += rx2*ffac;
                         fy[ii] += ry2*ffac;

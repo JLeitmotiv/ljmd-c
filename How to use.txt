@@ -1,0 +1,75 @@
+Description:
+-----------------------------------
+This is a simple program for the simulation of Molecular Dynamics.
+The C program is interfaces with python.
+
+Features:
+-----------------------------------
+	* Input file
+	* GUI interface
+	* Potentials:
+	     - Lennard Jones
+	     - Morse
+	     - Home Made (Tabular Form) (Not Completed)
+	* Integrator:
+	     - Verlet Integrator
+	     - Runge Kutta Integrator (Not Completed)
+	* Thermostate calculation
+	     - Andersen
+
+A) How to use?
+-----------------------------------
+1. Comile: First of all, it is needed to be compiled. 
+to compile: 
+	make
+This will build the serial and parallel dynamic library that is to
+be bound with the python file
+
+
+2. Run: This program is capable of taking 3 different types of input
+from the user i.e, screen, file and GUI. To run, go in python folder 
+and
+
+to run screen:
+	$ ./main.py
+to input a file:
+	$ ./main.py -f [--file] <filename.inp>
+to use GUI:
+	$ ./main.py -g [--gui]
+
+
+B) Format of input file with the extension *.inp :
+-------------------------------------
+natoms 108             # natoms
+mass 39.948            # mass in AMU
+epsilon 0.2379         # epsilon in kcal/mol
+sigma 3.405            # sigma in angstrom
+rcut 8.5               # rcut in angstrom
+boxlength 17.1580      # box length (in angstrom)
+restart argon_108.rest # restart
+coord argon_108.xyz    # coord_output file
+thermo argon_108.dat   # thermo_output
+nsteps 10000           # nr MD steps
+timestep 5.0           # MD time step (in fs)
+print 100              # output print frequency
+
+potential morse param1 param2 param3
+potential lj epsilon sigma 
+
+nvt Temp freq(nu 1/fs) # ensemble (Canonical === Andersen thermostat)
+
+nve                    # ensemble (MicroCanonical)
+
+** If you donot want to calculate Andersen thermostate leave the last
+blank.
+
+C) Files descriptions:
+*.rest	: contain the information of restarting
+*.xyz	: contain the position of the atoms with respect to time step
+*.dat	: contain the output information of energies with respect to time
+	  (Temperature, Kinetic, Potential and Total energy)
+
+D) For help type:
+	./main.py -h
+	./main.py --help
+
