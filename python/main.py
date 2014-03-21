@@ -1,3 +1,6 @@
+#!/usr/bin/python
+
+
 #This is a python Interface that couples whit a Molecular Dynamics program write in C.
 #The features supported are:
 #       Lennard-Jones potential 
@@ -6,13 +9,12 @@
 #       Automatic plotting of Energy and Temperature graphs
 #       Output of Coordinates in xyz format
 #       Output of thermodynamic data  
-#	→ Step Temp Ekin Epot Etot	 
+#       Step Temp Ekin Epot Etot	 
 
 #Authoring of the C code corresponds to Axel Kohlmeyer
 #Authoring of Python interface corresponds to Alcain Pablo, Hoque Md. Enamul, Factorovich Matias.
 
 
-#!/usr/bin/python
 import sys
 import numpy as np
 from ctypes import *
