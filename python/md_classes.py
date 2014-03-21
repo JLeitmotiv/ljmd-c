@@ -129,10 +129,18 @@ class mdsys_t(Structure):
                self.natoms=int(inp[1])
             elif key=="mass":
                self.mass=float(inp[1])
-            elif key=="epsilon":
-               self.epsilon=float(inp[1])
-            elif key=="sigma":   
-               self.sigma=float(inp[1])
+            elif key=="potential":
+		if inp[1]=="lj":
+		   self.type_potential = 1
+                   self.epsilon=float(inp[2])
+                   self.sigma=float(inp[3])
+                if inp[1]=="morse":
+		   self.type_potential = 2
+                   self.De= float(inp[2])
+                   self.a=float(inp[3])
+                   self.re=float(inp[4])
+            elif key=="npoints":
+               self.npoints=int(inp[1])
             elif key=="rcut":
                self.rcut=float(inp[1])
             elif key=="boxlength":
@@ -149,15 +157,17 @@ class mdsys_t(Structure):
                self.file_therm = open(inp[1].strip(),'w')
             elif key=="coord":
                self.file_coord = open(inp[1].strip(),'w')
-            elif key=="Andersen":
+            elif key=="nvt":
                self.tempin=float(inp[1])
                self.nu=float(inp[2])
                self.thermostat=True 
                mvsq2e=2390.05736153349
                kboltz=0.0019872067
                self.var_andersen=(kboltz*self.tempin/mvsq2e/self.mass)**0.5
+            elif key=="nve":
+               self.thermostat=False
             elif key=="nsteps":
-                self.nsteps=int(inp[1])
+               self.nsteps=int(inp[1])
 
    def gui_input(self):
       root = Tk()
@@ -183,6 +193,12 @@ class mdsys_t(Structure):
       self.thermostat = app.thermostat
       self.tempin = app.tempin
       self.nu = app.nu
+      self.type_potential = app.type_potential
+      self.npoints = int(app.npoints)
+      self.De = float(app.de)
+      self.a = float(app.a)
+      self.re = float(app.re)
+
 
    def screen_input(self):
       print "Number of atoms"

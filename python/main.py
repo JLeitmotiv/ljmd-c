@@ -8,7 +8,7 @@
 #       Automatic plotting of Energy and Temperature graphs
 #       Output of Coordinates in xyz format
 #       Output of thermodynamic data  
-#	→ Step Temp Ekin Epot Etot	 
+#       Step Temp Ekin Epot Etot	 
 
 #Authoring of the C code corresponds to Axel Kohlmeyer
 #Authoring of Python interface corresponds to Alcain Pablo, Hoque Md. Enamul, Factorovich Matias.
@@ -22,8 +22,6 @@ from md_classes import mdsys_t
 from create_potential import *
 import argparse
 import time
-md=CDLL("../libljmd-serial.so")
-#md=CDLL("../libljmd-parallel.so")
 
 if __name__ == "__main__":
    parser = argparse.ArgumentParser()
@@ -31,45 +29,37 @@ if __name__ == "__main__":
                        action="store_true")
    parser.add_argument("-f", "--file", help="input file",
                        type = str)
+   parser.add_argument("-p", "--parallel", help="parallel on",
+                       action="store_true")
    args = parser.parse_args()
+   if args.parallel: 
+      md=CDLL("../libljmd-parallel.so")
+   else:   
+      md=CDLL("../libljmd-serial.so")
 
-
-   LJPot = LennardJones(8.5, 10000, 3.405, 0.2379)
-   cellfreq=4;
-   mdsys=mdsys_t()
-   md.start_threads(byref(mdsys))
-   mdsys.natoms = 108
-   mdsys.dt = 1.0
-   mdsys.mass = 39.948
-   mdsys.box = 17.1580
-   mdsys.nsteps = 10000
-   mdsys.nprint = 100
-   mdsys.inputfile = "argon_108.rest"
-   mdsys.file_coord = open("argon_108.xyz",'w')
-   mdsys.file_therm = open("argon_108.dat",'w')
-   mdsys.ptable.npoints = 10000
-	   mdsys.ptable.rcut = 8.5
-   mdsys.ptable.r = LJPot.r.ctypes.data_as(POINTER(c_double))
-   mdsys.ptable.V = LJPot.V.ctypes.data_as(POINTER(c_double))
-   mdsys.ptable.F = LJPot.F.ctypes.data_as(POINTER(c_double))
 
    cellfreq=4;
    mdsys=mdsys_t()
    md.start_threads(byref(mdsys))
  
-   if len(sys.argv)==1:
-      mdsys.screen_input()
-   elif args.gui:
+   if args.gui:
       mdsys.gui_input()
-   else:
+   elif args.file != None:
       mdsys.file_input(args.file)
+   else:
+      mdsys.screen_input()
 
-   mdsys.ptable.npoints = 10000
-   mdsys.ptable.rcut = 8.5
-   mdsys.ptable.r = LJPot.r.ctypes.data_as(POINTER(c_double))
-   mdsys.ptable.V = LJPot.V.ctypes.data_as(POINTER(c_double))
-   mdsys.ptable.F = LJPot.F.ctypes.data_as(POINTER(c_double))
-#
+   if mdsys.type_potential ==1:
+      Pot = LennardJones(mdsys.rcut, mdsys.npoints, mdsys.sigma, mdsys.epsilon)
+   else:
+      Pot = Morse(mdsys.rcut, mdsys.npoints, mdsys.De, mdsys.a, mdsys.re)
+      
+   mdsys.ptable.r = Pot.r.ctypes.data_as(POINTER(c_double))
+   mdsys.ptable.V = Pot.V.ctypes.data_as(POINTER(c_double))
+   mdsys.ptable.F = Pot.F.ctypes.data_as(POINTER(c_double))
+   mdsys.ptable.rcut = mdsys.rcut
+   mdsys.ptable.npoints = mdsys.npoints
+
    mdsys.allocate_arrays()
    mdsys.read_restart()
 
@@ -82,14 +72,11 @@ if __name__ == "__main__":
    mdsys.allocate_arrays()
    mdsys.read_restart()
  
-   md.updcells(byref(mdsys));
-   md.ekin(byref(mdsys));
-   md.force(byref(mdsys));
+   md.updcells(byref(mdsys))
+   md.ekin(byref(mdsys))
+   md.force(byref(mdsys))
 
-
-   if mdsys.thermostat==False:  
-    for i in range(mdsys.nsteps):
-      ## This is the main loop, integrator and force calculator
+   for i in range(mdsys.nsteps):
       if (i % mdsys.nprint == 0):
          mdsys.output(i)
          time.append(i)
@@ -97,18 +84,7 @@ if __name__ == "__main__":
       md.ekin(byref(mdsys))
       if (i % cellfreq == 0):
          md.updcells(byref(mdsys))
-   if mdsys.thermostat==True:
-    for i in range(mdsys.nsteps):
-      ## This is the main loop, integrator and force calculator
-      print i
-      if (i % mdsys.nprint == 0):
-         mdsys.output(i)
-         time.append(i)
-      md.velverlet(byref(mdsys))
-      md.ekin(byref(mdsys))
-      md.andersen(byref(mdsys))
-      if (i % cellfreq == 0):
-         md.updcells(byref(mdsys))
+      if mdsys.thermostat: md.andersen(byref(mdsys))
 
 
    ###--- the variables are loaded for plot
