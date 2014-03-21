@@ -33,9 +33,9 @@ if __name__ == "__main__":
                        action="store_true")
    args = parser.parse_args()
    if args.parallel: 
-      md=CDLL("../libljmd-parallel.so")
+      md=CDLL("../libcoffeemd-parallel.so")
    else:   
-      md=CDLL("../libljmd-serial.so")
+      md=CDLL("../libcoffeemd-serial.so")
 
 
    cellfreq=4;
@@ -49,7 +49,7 @@ if __name__ == "__main__":
    else:
       mdsys.screen_input()
 
-   if mdsys.type_potential ==1:
+   if mdsys.type_potential == 1:
       Pot = LennardJones(mdsys.rcut, mdsys.npoints, mdsys.sigma, mdsys.epsilon)
    else:
       Pot = Morse(mdsys.rcut, mdsys.npoints, mdsys.De, mdsys.a, mdsys.re)

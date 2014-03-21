@@ -233,13 +233,8 @@ Please give the input parameter
         self.ergfile_entry.grid(row=11, column=1, sticky=W, pady=4)
 
 	# radio potential
-<<<<<<< HEAD
         self.potential_label = Label(self, text = "Potential: ")
-        self.potential_label.grid(row=4, column=2, sticky=W, pady=4)
-=======
-        self.potential_label = Label(self, text = "Choice Potential: ")
         self.potential_label.grid(row=1, column=2, sticky=W, pady=4)
->>>>>>> 140aa19511a17e44e8835c0a2a596600a1bd54eb
 	for val, txt in self.potential:
     	    Radiobutton(self, 
                 text=txt,
